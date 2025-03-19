@@ -1,0 +1,94 @@
+<mxfile host="app.diagrams.net" modified="2024-02-12T12:57:02.785Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0" etag="nt53gcHC8kT0wY6V_PEV" version="23.1.2" type="device">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="1129" dy="517" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="zkfFHV4jXpPFQw0GAbJ--0" value="Kunde" style="swimlane;fontStyle=2;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="35" y="30" width="340" height="370" as="geometry">
+            <mxRectangle x="230" y="140" width="160" height="26" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zkfFHV4jXpPFQw0GAbJ--1" value="- name: String&#xa;- ort: String&#xa;- e-mail: String&#xa;- identifikationsNr: String&#xa;- kreWürdigkeit: boolean&#xa;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="zkfFHV4jXpPFQw0GAbJ--0" vertex="1">
+          <mxGeometry y="26" width="340" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="zkfFHV4jXpPFQw0GAbJ--4" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="zkfFHV4jXpPFQw0GAbJ--0" vertex="1">
+          <mxGeometry y="110" width="340" height="6" as="geometry" />
+        </mxCell>
+        <mxCell id="p5UWRYRB_leErU77j1KG-0" value="+ Kunde(name: String, ort: String, email: String,&#xa;               identifikationsNr: String, kreWuerdigkeit: boolean)&#xa;+ getName(): String&#xa;+ getOrt(): String&#xa;+ getIdentifikationsNr: String&#xa;+ getKundeID(con: Connection): int&#xa;+ toString(con: Connection): String&#xa;+ eroeffneGiroKonto(con: Connection, kid: int, &#xa;                                  isUeberweisung: boolean): GiroKonto&#xa;+ eroeffneSparKonto(con: Connection, kid: int, &#xa;                                  isUeberweisung: boolean): SparKonto&#xa;+ druckeKontoauszugGiroKonto(giroKonto: GiroKonto,&#xa;                                                    name: String, ort: String&#xa;                                                    kid: int)&#xa;+ druckeKontoauszugSparKonto(sparKonto: SparKonto&#xa;                                                     name: String, ort: String&#xa;                                                     kid: int)&#xa; &#xa;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="zkfFHV4jXpPFQw0GAbJ--0" vertex="1">
+          <mxGeometry y="116" width="340" height="254" as="geometry" />
+        </mxCell>
+        <mxCell id="p5UWRYRB_leErU77j1KG-2" value="Konto&lt;abstrakt&gt;" style="swimlane;fontStyle=2;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="470" y="30" width="330" height="290" as="geometry">
+            <mxRectangle x="230" y="140" width="160" height="26" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p5UWRYRB_leErU77j1KG-3" value="- kontoNr: String&#xa;- kontoStand: double&#xa;- kontoAktiv: boolean&#xa;- summeEinzahlungen: double&#xa;- summeAuszahlungen: double&#xa;&#xa;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="p5UWRYRB_leErU77j1KG-2" vertex="1">
+          <mxGeometry y="26" width="330" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="p5UWRYRB_leErU77j1KG-4" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="p5UWRYRB_leErU77j1KG-2" vertex="1">
+          <mxGeometry y="110" width="330" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="p5UWRYRB_leErU77j1KG-5" value="+ Konto(kontoNr: String, kontoStand: double)&#xa;+ getKontoNr(): String&#xa;+ getKontoStand(): double&#xa;+ isKontoAktiv(): boolean&#xa;+ getSummeEinzahlungen(): double&#xa;+ getSummeAuszahlungen(): double &#xa;+ auszahlen(betrag: double, con: Connection)&#xa;+ ueberweisen(betrag: double, konto: Konto&#xa;                         con: Connection, kontoNrVersender: String&#xa;                         kontoNrEmpfaenger: String)&#xa;+ berechneZinsen(con: Connection)" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="p5UWRYRB_leErU77j1KG-2" vertex="1">
+          <mxGeometry y="120" width="330" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="p5UWRYRB_leErU77j1KG-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="524" y="321" as="targetPoint" />
+            <mxPoint x="350" y="513.5799999999999" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="350" y="437" />
+              <mxPoint x="524" y="437" />
+              <mxPoint x="524" y="321" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p5UWRYRB_leErU77j1KG-6" value="GiroKonto" style="swimlane;fontStyle=2;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="240" y="500" width="290" height="250" as="geometry">
+            <mxRectangle x="240" y="500" width="160" height="26" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p5UWRYRB_leErU77j1KG-7" value="- ueberziehungsLimit: double&#xa;- negativZinssatz: double&#xa;- positivZinssatz: double&#xa;- spesen: double&#xa;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="p5UWRYRB_leErU77j1KG-6" vertex="1">
+          <mxGeometry y="26" width="290" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="p5UWRYRB_leErU77j1KG-8" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="p5UWRYRB_leErU77j1KG-6" vertex="1">
+          <mxGeometry y="90" width="290" height="6" as="geometry" />
+        </mxCell>
+        <mxCell id="p5UWRYRB_leErU77j1KG-9" value="+ GiroKonto(kontoNr: String, kontoStand: double, &#xa;                    ueberziehungsLimit: double, &#xa;                    negativZinssatz: double, &#xa;                    positivZinssatz: double, spesen double)&#xa;+ getUeberziehungsLimit(): double&#xa;+ getNegativZinssatz(): double&#xa;+ getPositivZinssatz(): double&#xa;+ getSpesen(): double&#xa;+ einzahlen(betrag: double, con: Connection)&#xa;+ spesenAbziehen(con: Connection)&#xa;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="p5UWRYRB_leErU77j1KG-6" vertex="1">
+          <mxGeometry y="96" width="290" height="154" as="geometry" />
+        </mxCell>
+        <mxCell id="p5UWRYRB_leErU77j1KG-15" value="SparKonto" style="swimlane;fontStyle=2;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="610" y="500" width="320" height="130" as="geometry">
+            <mxRectangle x="230" y="140" width="160" height="26" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p5UWRYRB_leErU77j1KG-16" value="- zinssatz: double &#xa;" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="p5UWRYRB_leErU77j1KG-15" vertex="1">
+          <mxGeometry y="26" width="320" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="p5UWRYRB_leErU77j1KG-17" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="p5UWRYRB_leErU77j1KG-15" vertex="1">
+          <mxGeometry y="50" width="320" height="6" as="geometry" />
+        </mxCell>
+        <mxCell id="p5UWRYRB_leErU77j1KG-18" value="+ SparKonto(kontoNr: String, kontoStand:double,&#xa;                     zinssatz: double)&#xa;+ getZinssatz: double&#xa;+ monatlicheEinzahlung(betrag: double, con: Connection)" style="text;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="p5UWRYRB_leErU77j1KG-15" vertex="1">
+          <mxGeometry y="56" width="320" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="p5UWRYRB_leErU77j1KG-26" value="" style="endArrow=open;endFill=1;endSize=12;html=1;rounded=0;exitX=1;exitY=0.892;exitDx=0;exitDy=0;exitPerimeter=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="zkfFHV4jXpPFQw0GAbJ--1" edge="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="310" y="140" as="sourcePoint" />
+            <mxPoint x="470" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nZufV_AxttWpFvZ96E2D-0" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="p5UWRYRB_leErU77j1KG-15" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="635" y="320" as="targetPoint" />
+            <mxPoint x="460" y="513.5799999999999" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="725" y="370" />
+              <mxPoint x="635" y="370" />
+              <mxPoint x="635" y="290" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
