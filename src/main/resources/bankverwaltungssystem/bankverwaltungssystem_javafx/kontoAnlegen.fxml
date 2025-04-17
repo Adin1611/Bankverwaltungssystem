@@ -18,12 +18,12 @@
             <Font name="System Bold" size="40.0" />
          </font>
       </Label>
-      <HBox layoutY="100.0" prefHeight="450.0" prefWidth="700.0" spacing="20.0">
+      <HBox fx:id="hbKonten" layoutY="100.0" prefHeight="450.0" prefWidth="700.0" spacing="20.0">
          <padding>
             <Insets top="10.0" />
          </padding>
          <children>
-            <VBox prefHeight="200.0" prefWidth="320.0">
+            <VBox fx:id="vbGirokonto" prefHeight="200.0" prefWidth="320.0">
                <children>
                   <Label fx:id="lblGirokonto" alignment="CENTER" prefHeight="40.0" prefWidth="250.0" text="Girokonto">
                      <font>
@@ -148,7 +148,7 @@
                   </Button>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="320.0">
+            <VBox fx:id="vbSparkonto" prefHeight="200.0" prefWidth="320.0">
                <children>
                   <Label fx:id="lblSparkonto" alignment="CENTER" prefHeight="40.0" prefWidth="250.0" text="Sparkonto">
                      <font>

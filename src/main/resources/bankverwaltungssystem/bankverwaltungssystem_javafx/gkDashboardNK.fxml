@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="550.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bankverwaltungssystem.bankverwaltungssystem_javafx.GKDashboardNK">
+   <children>
+      <Label fx:id="lblKontostand" layoutX="225.0" layoutY="30.0" prefHeight="80.0" prefWidth="250.0" style="-fx-background-color: C3C3C3; -fx-border-color: black;">
+         <font>
+            <Font size="40.0" />
+         </font>
+      </Label>
+      <VBox fx:id="vbInfosGK" layoutX="30.0" layoutY="150.0" prefHeight="360.0" prefWidth="280.0" style="-fx-background-color: E6E6E6; -fx-border-color: black;">
+         <children>
+            <Label fx:id="lblGKKontoNr" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Nr:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" top="20.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="txtGKKontoNr" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+               <VBox.margin>
+                  <Insets left="70.0" top="-22.0" />
+               </VBox.margin>
+            </TextField>
+            <Label fx:id="lblGKKontoAktiv" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Aktiv:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" top="20.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="txtGKKontoAktiv" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+               <VBox.margin>
+                  <Insets left="70.0" top="-22.0" />
+               </VBox.margin>
+            </TextField>
+            <Label fx:id="lblGKEInzahlugen" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Einza:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" top="20.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="txtGKEInzahlungen" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+               <VBox.margin>
+                  <Insets left="70.0" top="-22.0" />
+               </VBox.margin>
+            </TextField>
+            <Label fx:id="lblGKAuszahlungen" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Ausza:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" top="20.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="txtGKAuszahlungen" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+               <VBox.margin>
+                  <Insets left="70.0" top="-22.0" />
+               </VBox.margin>
+            </TextField>
+            <Label fx:id="lblGKUberziehungslimit" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Limit:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" top="20.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="txtGKUeberziehungslimit" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+               <VBox.margin>
+                  <Insets left="70.0" top="-22.0" />
+               </VBox.margin>
+            </TextField>
+            <Label fx:id="lblGKNegativZinssatz" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="N-Zins:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" top="20.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="txtGKNegativZinssatz" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+               <VBox.margin>
+                  <Insets left="70.0" top="-22.0" />
+               </VBox.margin>
+            </TextField>
+            <Label fx:id="lblGKPositivZinssatz" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="P-Zins:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" top="20.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="txtGKPositivZinssatz" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+               <VBox.margin>
+                  <Insets left="70.0" top="-22.0" />
+               </VBox.margin>
+            </TextField>
+            <Label fx:id="lblGKSpesen" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Spesen:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" top="20.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="txtGKSpesen" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+               <VBox.margin>
+                  <Insets left="70.0" top="-22.0" />
+               </VBox.margin>
+            </TextField>
+         </children>
+      </VBox>
+      <VBox fx:id="vbEinzahlung" layoutX="340.0" layoutY="150.0" prefHeight="100.0" prefWidth="160.0" style="-fx-background-color: E6E6E6; -fx-border-color: black;">
+         <children>
+            <Label fx:id="lblGKEinzahlung" text="Einzahlung">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="36.5" />
+               </VBox.margin>
+            </Label>
+            <Label fx:id="lblGKEinzahlungBetrag" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Betrag:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="5.0" top="7.5" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="txtGKEinzahlungBetrag" maxHeight="20.0" maxWidth="90.0" promptText="..." style="-fx-background-color: E6E6E6;">
+               <VBox.margin>
+                  <Insets left="60.0" top="-22.0" />
+               </VBox.margin>
+            </TextField>
+            <Button fx:id="btnGKEinzahlen" mnemonicParsing="false" prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: A8A8A8;" text="Einzahlen">
+               <VBox.margin>
+                  <Insets left="30.0" top="7.5" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+      <VBox fx:id="vbAuszahlung" layoutX="530.0" layoutY="150.0" prefHeight="100.0" prefWidth="160.0" style="-fx-background-color: E6E6E6; -fx-border-color: black;">
+         <children>
+            <Label fx:id="lblGKAuszahlung" text="Auszahlung">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="33.5" />
+               </VBox.margin>
+            </Label>
+            <Label fx:id="lblGKAuszahlungBetrag" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Betrag:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="5.0" top="7.5" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="txtGKAuszahlungBetrag" maxHeight="20.0" maxWidth="90.0" promptText="..." style="-fx-background-color: E6E6E6;">
+               <VBox.margin>
+                  <Insets left="60.0" top="-22.0" />
+               </VBox.margin>
+            </TextField>
+            <Button fx:id="btnGKAuszahlen" mnemonicParsing="false" prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: A8A8A8;" text="Auszahlen">
+               <VBox.margin>
+                  <Insets left="30.0" top="7.5" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+      <HBox fx:id="hbUeberweisung" layoutX="340.0" layoutY="270.0" prefHeight="140.0" prefWidth="350.0" style="-fx-background-color: E6E6E6; -fx-border-color: black;">
+         <children>
+            <Label fx:id="lblGKUeberweisung" minWidth="110.0" text="Überweisung">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="122.5" />
+               </HBox.margin>
+            </Label>
+            <Label fx:id="lblGKUeberweisungBetrag" alignment="CENTER" minHeight="20.0" minWidth="50.0" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Betrag:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="-180.0" top="30.0" />
+               </HBox.margin>
+            </Label>
+            <TextField fx:id="txtGKUeberweisungBetrag" minWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+               <HBox.margin>
+                  <Insets left="20.0" top="28.0" />
+               </HBox.margin>
+            </TextField>
+            <Label fx:id="lblGKUeberweisungKontoNr" alignment="CENTER" minHeight="20.0" minWidth="50.0" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Nr:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="-270.0" top="70.0" />
+               </HBox.margin>
+            </Label>
+            <TextField fx:id="txtGKUeberweisungKontoNr" prefWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+               <HBox.margin>
+                  <Insets left="20.0" top="68.0" />
+               </HBox.margin>
+            </TextField>
+            <Button fx:id="btnGKUeberweisen" minWidth="100.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: A8A8A8;" text="Überweisen">
+               <HBox.margin>
+                  <Insets left="-200.0" top="100.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <Button fx:id="btnGKZinsenBerechnen" layoutX="427.5" layoutY="430.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="175.0" style="-fx-background-color: A8A8A8;" text="Zinsen berechnen" />
+      <Button fx:id="btnGKSpesenAbziehen" layoutX="427.5" layoutY="470.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="175.0" style="-fx-background-color: A8A8A8;" text="Spesen abziehen" />
+      <Button fx:id="btnGKKontoauszugDrucken" layoutX="427.5" layoutY="510.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="175.0" style="-fx-background-color: A8A8A8;" text="Kontoauszug drucken" />
+   </children>
+</AnchorPane>

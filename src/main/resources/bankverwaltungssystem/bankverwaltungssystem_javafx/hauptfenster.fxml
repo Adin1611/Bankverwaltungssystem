@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="lblUeberschrift" alignment="CENTER" layoutX="120.0" layoutY="20.0" minHeight="50.0" minWidth="470.0" text="Bankverwaltungssystem">
@@ -19,12 +18,12 @@
             <Font name="System Bold" size="40.0" />
          </font>
       </Label>
-      <HBox layoutY="100.0" prefHeight="450.0" prefWidth="700.0" spacing="20.0">
+      <HBox fx:id="hbKunde" layoutY="100.0" prefHeight="450.0" prefWidth="700.0" spacing="20.0">
          <padding>
             <Insets top="10.0" />
          </padding>
          <children>
-            <VBox prefHeight="200.0" prefWidth="320.0">
+            <VBox fx:id="vbNeuerKunde" prefHeight="200.0" prefWidth="320.0">
                <children>
                   <Label fx:id="lblNeuerKunde" alignment="CENTER" prefHeight="40.0" prefWidth="250.0" text="Neuer Kunde">
                      <font>
@@ -123,7 +122,7 @@
                   </Button>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="320.0">
+            <VBox fx:id="vbVorhandeneKunde" prefHeight="200.0" prefWidth="320.0">
                <children>
                   <Label fx:id="lblVorhanKunde" alignment="CENTER" prefHeight="40.0" prefWidth="250.0" text="Vorhan. Kunde">
                      <font>
