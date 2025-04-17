@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="380.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bankverwaltungssystem.bankverwaltungssystem_javafx.Kontoauszug">
+   <children>
+      <Label fx:id="lblKontoauszug" layoutX="205.0" layoutY="20.0" prefHeight="50.0" prefWidth="190.0" text="Kontoauszug">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <HBox fx:id="hbKontoauszug" layoutX="10.0" layoutY="70.0" minHeight="300.0" prefHeight="200.0" prefWidth="580.0">
+         <children>
+            <VBox fx:id="vbKontoauszug1" minHeight="300.0" prefHeight="300.0" prefWidth="290.0">
+               <children>
+                  <Label fx:id="lblName1" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Name:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblName2" maxHeight="20.0" maxWidth="200.0" minHeight="20.0" style="-fx-background-color: E6E6E6;" text="...">
+                     <VBox.margin>
+                        <Insets left="70.0" top="-20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblOrt1" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Ort:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblOrt2" maxHeight="20.0" maxWidth="200.0" minHeight="20.0" style="-fx-background-color: E6E6E6;" text="...">
+                     <VBox.margin>
+                        <Insets left="70.0" top="-20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblEmail" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Email:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblEmail2" maxHeight="20.0" maxWidth="200.0" minHeight="20.0" style="-fx-background-color: E6E6E6;" text="...">
+                     <VBox.margin>
+                        <Insets left="70.0" top="-20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblID" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="ID:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblID2" maxHeight="20.0" maxWidth="200.0" minHeight="20.0" style="-fx-background-color: E6E6E6;" text="...">
+                     <VBox.margin>
+                        <Insets left="70.0" top="-20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblKreWuerdigkeit" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Kred?">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblIKreWuerdigkeit2" maxHeight="20.0" maxWidth="200.0" minHeight="20.0" style="-fx-background-color: E6E6E6;" text="...">
+                     <VBox.margin>
+                        <Insets left="70.0" top="-20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblKontoNr1" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Nr:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblKontoNr2" maxHeight="20.0" maxWidth="200.0" minHeight="20.0" style="-fx-background-color: E6E6E6;" text="...">
+                     <VBox.margin>
+                        <Insets left="70.0" top="-20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblKontostand1" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Stand:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblKontostand2" maxHeight="20.0" maxWidth="200.0" minHeight="20.0" style="-fx-background-color: E6E6E6;" text="...">
+                     <VBox.margin>
+                        <Insets left="70.0" top="-20.0" />
+                     </VBox.margin>
+                  </Label>
+               </children>
+            </VBox>
+            <VBox fx:id="vbKontoauszug2" prefHeight="200.0" prefWidth="290.0">
+               <children>
+                  <Label fx:id="lblKontoAktiv1" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Aktiv:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblKontoAktiv2" maxHeight="20.0" maxWidth="200.0" minHeight="20.0" style="-fx-background-color: E6E6E6;" text="...">
+                     <VBox.margin>
+                        <Insets left="70.0" top="-20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblEinzahlungen1" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Einza:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblEinzahlungen2" maxHeight="20.0" maxWidth="200.0" minHeight="20.0" style="-fx-background-color: E6E6E6;" text="...">
+                     <VBox.margin>
+                        <Insets left="70.0" top="-20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblAuszahlungen1" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Ausza:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblAuszahlungen2" maxHeight="20.0" maxWidth="200.0" minHeight="20.0" style="-fx-background-color: E6E6E6;" text="...">
+                     <VBox.margin>
+                        <Insets left="70.0" top="-20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblUberziehungslimit1" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Limit:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblUeberziehungslimit2" maxHeight="20.0" maxWidth="200.0" minHeight="20.0" style="-fx-background-color: E6E6E6;" text="...">
+                     <VBox.margin>
+                        <Insets left="70.0" top="-20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblNegativZinssatz1" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="N-Zins:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblNegativZinssatz2" maxHeight="20.0" maxWidth="200.0" minHeight="20.0" style="-fx-background-color: E6E6E6;" text="...">
+                     <VBox.margin>
+                        <Insets left="70.0" top="-20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblPositivZinssatz1" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="P-Zins:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblPositivZinssatz2" maxHeight="20.0" maxWidth="200.0" minHeight="20.0" style="-fx-background-color: E6E6E6;" text="...">
+                     <VBox.margin>
+                        <Insets left="70.0" top="-20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblSpesen1" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Spesen:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="10.0" top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblSpesen2" maxHeight="20.0" maxWidth="200.0" minHeight="20.0" style="-fx-background-color: E6E6E6;" text="...">
+                     <VBox.margin>
+                        <Insets left="70.0" top="-20.0" />
+                     </VBox.margin>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
