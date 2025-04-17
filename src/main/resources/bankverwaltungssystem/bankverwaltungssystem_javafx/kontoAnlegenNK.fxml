@@ -67,7 +67,7 @@
                         <Insets left="40.0" top="20.0" />
                      </VBox.margin>
                   </Label>
-                  <RadioButton fx:id="btnNKKredWuerdigkeitJa" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" text="Ja">
+                  <RadioButton fx:id="btnGKKredWuerdigkeitJa" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" text="Ja">
                      <VBox.margin>
                         <Insets left="120.0" top="-20.0" />
                      </VBox.margin>
@@ -78,7 +78,7 @@
                         <ToggleGroup fx:id="btnNKKontoAktiv" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton fx:id="btnNKKredWuerdigkeitNein" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" text="Nein" toggleGroup="$btnNKKontoAktiv">
+                  <RadioButton fx:id="btnGKKredWuerdigkeitNein" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" text="Nein" toggleGroup="$btnNKKontoAktiv">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
@@ -91,7 +91,7 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                      <VBox.margin>
-                        <Insets left="40.0" top="25.0" />
+                        <Insets left="40.0" top="20.0" />
                      </VBox.margin>
                   </Label>
                   <TextField fx:id="txtGKSpesen" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
@@ -192,11 +192,28 @@
                         <Insets left="40.0" top="20.0" />
                      </VBox.margin>
                   </Label>
-                  <TextField fx:id="txtSKKontoAktiv" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+                  <RadioButton fx:id="btnSKKredWuerdigkeitJa" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" text="Ja">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <toggleGroup>
+                        <ToggleGroup fx:id="btnNKKontoAktiv1" />
+                     </toggleGroup>
                      <VBox.margin>
-                        <Insets left="100.0" top="-22.0" />
+                        <Insets left="120.0" top="-20.0" />
                      </VBox.margin>
-                  </TextField>
+                  </RadioButton>
+                  <RadioButton fx:id="btnSKKredWuerdigkeitNein" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" text="Nein">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="btnNKKontoAktiv1" />
+                     </toggleGroup>
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="180.0" top="-20.0" />
+                     </VBox.margin>
+                  </RadioButton>
                   <Label fx:id="lblSKZinssatz" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Zins:">
                      <font>
                         <Font name="System Bold" size="14.0" />

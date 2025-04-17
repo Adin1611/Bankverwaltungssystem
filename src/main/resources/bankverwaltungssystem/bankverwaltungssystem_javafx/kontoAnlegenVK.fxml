@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="lblKonto" alignment="CENTER" layoutX="200.0" layoutY="20.0" minHeight="50.0" minWidth="300.0" text="Konto">
+         <font>
+            <Font name="System Bold" size="40.0" />
+         </font>
+      </Label>
+      <HBox fx:id="hbKonten" layoutY="70.0" prefHeight="450.0" prefWidth="700.0" spacing="20.0">
+         <padding>
+            <Insets top="10.0" />
+         </padding>
+         <children>
+            <VBox fx:id="vbGirokonto" prefHeight="200.0" prefWidth="320.0">
+               <children>
+                  <Label fx:id="lblNeuesGirokonto" alignment="CENTER" prefHeight="40.0" prefWidth="250.0" text="Neues Girokonto">
+                     <font>
+                        <Font size="32.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="35.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblGKKontoNr" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Nr:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="40.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="txtGKKontoNr" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+                     <VBox.margin>
+                        <Insets left="100.0" top="-22.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label fx:id="lblGKKontostand" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Stand:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="40.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="txtGKKontostand" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+                     <VBox.margin>
+                        <Insets left="100.0" top="-22.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label fx:id="lblGKKontoAktiv" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Aktiv:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="40.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <RadioButton fx:id="btnGKKredWuerdigkeitJa" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" text="Ja">
+                     <VBox.margin>
+                        <Insets left="120.0" top="-20.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <toggleGroup>
+                        <ToggleGroup fx:id="btnVKKontoAktiv" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="btnGKKredWuerdigkeitNein" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" text="Nein" toggleGroup="$btnVKKontoAktiv">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="180.0" top="-20.0" />
+                     </VBox.margin>
+                  </RadioButton>
+                  <Label fx:id="lblGKSpesen" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Spesen:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="40.0" top="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="txtGKSpesen" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+                     <VBox.margin>
+                        <Insets left="100.0" top="-22.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label fx:id="lblGKUeberziehungslimit" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Limit:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="40.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="txtGKUeberziehungslimit" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+                     <VBox.margin>
+                        <Insets left="100.0" top="-22.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label fx:id="lblGKNegativZinssatz" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="N-Zins:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="40.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="txtGKNegativZinssatz" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+                     <VBox.margin>
+                        <Insets left="100.0" top="-22.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label fx:id="lblGKPositivZinssatz" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="P-Zins:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="40.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="txtGKPositivZinssatz" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+                     <VBox.margin>
+                        <Insets left="100.0" top="-22.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Button fx:id="btnGKAusfuehren" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: A8A8A8;" text="Ausführen">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="117.0" top="15.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Label fx:id="lblVorhandesGirokonto" alignment="CENTER" prefHeight="40.0" prefWidth="250.0" text="Vorh. Girokonto">
+                     <font>
+                        <Font size="32.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="30.0" top="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Button fx:id="btnGKSuchen" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: A8A8A8;" text="Suchen">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="117.0" top="15.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox fx:id="vbSparkonto" prefHeight="200.0" prefWidth="320.0">
+               <children>
+                  <Label fx:id="lblNeuesSparkonto" alignment="CENTER" prefHeight="40.0" prefWidth="250.0" text="Neues Sparkonto">
+                     <font>
+                        <Font size="32.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="35.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="lblSKKontoNr" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Nr:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="40.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="txtSKKontoNr" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+                     <VBox.margin>
+                        <Insets left="100.0" top="-22.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label fx:id="lblSKKontostand" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Stand:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="40.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="txtSKKontostand" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+                     <VBox.margin>
+                        <Insets left="100.0" top="-22.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Label fx:id="lblSKKontoAktiv" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Aktiv:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="40.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <RadioButton fx:id="btnSKKredWuerdigkeitJa" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" text="Ja">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <toggleGroup>
+                        <ToggleGroup fx:id="btnVKKontoAktiv1" />
+                     </toggleGroup>
+                     <VBox.margin>
+                        <Insets left="120.0" top="-20.0" />
+                     </VBox.margin>
+                  </RadioButton>
+                  <RadioButton fx:id="btnSKKredWuerdigkeitNein" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" text="Nein">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <toggleGroup>
+                        <ToggleGroup fx:id="btnVKKontoAktiv1" />
+                     </toggleGroup>
+                     <VBox.margin>
+                        <Insets left="180.0" top="-20.0" />
+                     </VBox.margin>
+                  </RadioButton>
+                  <Label fx:id="lblSKZinssatz" alignment="CENTER" prefHeight="20.0" prefWidth="50.0" style="-fx-background-color: CDC8C8;" text="Zins:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="40.0" top="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="txtSKZinssatz" maxHeight="20.0" maxWidth="200.0" promptText="..." style="-fx-background-color: E6E6E6;">
+                     <VBox.margin>
+                        <Insets left="100.0" top="-22.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <Button fx:id="btnSKAusfuehren" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: A8A8A8;" text="Ausführen">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="117.0" top="15.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Label fx:id="lblVorhandenesSparkonto" alignment="CENTER" prefHeight="40.0" prefWidth="250.0" text="Vorh. Sparkonto">
+                     <font>
+                        <Font size="32.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="30.0" top="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Button fx:id="btnSKSuchen" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: A8A8A8;" text="Suchen">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="117.0" top="15.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
