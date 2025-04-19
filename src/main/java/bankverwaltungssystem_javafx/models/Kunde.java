@@ -1,5 +1,8 @@
 package bankverwaltungssystem_javafx.models;
 
+import bankverwaltungssystem_javafx.application.DBManager;
+import javafx.beans.property.SimpleStringProperty;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -371,5 +374,41 @@ public class Kunde {
         System.out.println("Name: " + name + "\nOrt: " + ort + "\nEmail: " + email + "\nIdentifikationsNr: " + identifikationsNr + "\nKreditwürdigkeit (true/false): " + kreWuerdigkeit + "\nKontoNr: " + sparKonto.getKontoNr() +
                 "\nKontostand: " + sparKonto.getKontoStand() + "\nKontoAktiv (true/false): " + sparKonto.isKontoAktiv() + "\nEinnahmen: " + sparKonto.getSummeEinzahlungen() +
                 "\nAusgaben: " + sparKonto.getSummeAuszahlungen() + "\nZinssatz: " + sparKonto.getZinssatz() + "\nKundeID: " + kid);
+    }
+
+    public Kunde erstelleKunde(String name, String ort, String email, String id, boolean kreditwuerdig) throws SQLException {
+        Connection con = DBManager.getConnection();
+
+        String checkSQL = "SELECT * FROM kunde WHERE identifikationsNr = ?";
+        PreparedStatement checkStmt = con.prepareStatement(checkSQL);
+        checkStmt.setString(1, id);
+        ResultSet rs = checkStmt.executeQuery();
+
+        if (rs.next()) {
+            String abgerufenerName = rs.getString("name");
+            String abgerufenerOrt = rs.getString("ort");
+            String abgerufeneEmail = rs.getString("email");
+            String abgerufeneId = rs.getString("identifikationsNr");
+            boolean abgerufeneKreditw = rs.getBoolean("kreWuerdigkeit");
+
+            rs.close();
+            checkStmt.close();
+
+            return new Kunde(abgerufenerName, abgerufenerOrt, abgerufeneEmail, abgerufeneId, abgerufeneKreditw);
+        } else {
+            String insertSQL = "INSERT INTO kunde (name, ort, email, identifikationsNr, kreWuerdigkeit) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement insertStmt = con.prepareStatement(insertSQL);
+            insertStmt.setString(1, name);
+            insertStmt.setString(2, ort);
+            insertStmt.setString(3, email);
+            insertStmt.setString(4, id);
+            insertStmt.setBoolean(5, kreditwuerdig);
+            insertStmt.executeUpdate();
+            insertStmt.close();
+
+            rs.close();
+            checkStmt.close();
+            return new Kunde(name, ort, email, id, kreditwuerdig);
+        }
     }
 }

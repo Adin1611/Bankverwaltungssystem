@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bankverwaltungssystem_javafx.controllers.HauptfensterController">
    <children>
       <Label fx:id="lblUeberschrift" alignment="CENTER" layoutX="120.0" layoutY="20.0" minHeight="50.0" minWidth="470.0" text="Bankverwaltungssystem">
          <font>
@@ -112,7 +112,7 @@
                         <Insets left="180.0" top="-20.0" />
                      </VBox.margin>
                   </RadioButton>
-                  <Button fx:id="btnNKAusführen" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: A8A8A8;" text="Ausführen">
+                  <Button fx:id="btnNKAusführen" mnemonicParsing="false" onAction="#neuenKundenErstellen" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: A8A8A8;" text="Ausführen">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -145,7 +145,7 @@
                         <Insets left="100.0" top="-22.0" />
                      </VBox.margin>
                   </TextField>
-                  <Button fx:id="btnVKSuchen" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: A8A8A8;" text="Suchen">
+                  <Button fx:id="btnVKSuchen" mnemonicParsing="false" onAction="#kundenSuchen" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: A8A8A8;" text="Suchen">
                      <font>
                         <Font size="14.0" />
                      </font>
