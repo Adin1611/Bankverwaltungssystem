@@ -1,8 +1,16 @@
 package bankverwaltungssystem_javafx.models;
 
 import bankverwaltungssystem_javafx.application.DBManager;
+import bankverwaltungssystem_javafx.application.FensterManager;
+import bankverwaltungssystem_javafx.controllers.VorhandeneKundeController;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -136,48 +144,101 @@ public class Kunde {
                 "}";
     }
 
+
+    /**
+     * Eroeffnet ein neues Girokonto fuer den Kunden mit den angegebenen Parametern.
+     *
+     * @param con Die Verbindung zur Datenbank
+     * @param kid Die Kunden-ID
+     * @param isUberweisung Gibt an, ob es sich um eine Überweisung handelt
+     * @param kontoNr Die Kontonummer
+     * @param kontoStandStr Der Kontostand
+     * @param kontoAktiv Ob das Konto aktiv ist
+     * @param spesenStr Die Spesen
+     * @param ueberziehungsLimitStr Das Überziehungslimit
+     * @param negativZinssatzStr Der Negativzinssatz
+     * @param positivZinssatzStr Der Positivzinssatz
+     * @return Das neu eroeffnete Girokonto
+     * @throws SQLException Wenn ein Datenbankfehler auftritt
+     */
+    /*
+    public GiroKonto eroeffneGiroKonto2(Connection con, int kid,
+            String kontoNr, String kontoStandStr, boolean kontoAktiv, 
+            String spesenStr, String ueberziehungsLimitStr, 
+            String negativZinssatzStr, String positivZinssatzStr) throws SQLException, IllegalArgumentException {
+        
+        // Validierung der Eingaben
+        try {
+            double kontoStand = Double.parseDouble(kontoStandStr);
+            double spesen = Double.parseDouble(spesenStr);
+            double ueberziehungsLimit = Double.parseDouble(ueberziehungsLimitStr);
+            double negativZinssatz = Double.parseDouble(negativZinssatzStr);
+            double positivZinssatz = Double.parseDouble(positivZinssatzStr);
+
+            // Überprüfen, ob es das Girokonto schon gibt
+            String abfrageGiroKonto = "SELECT kontoNr FROM girokonto WHERE kontoNr = ?";
+            PreparedStatement psAbfrageGiroKonto = con.prepareStatement(abfrageGiroKonto);
+            psAbfrageGiroKonto.setString(1, kontoNr);
+            ResultSet rsAbfrageGiroKonto = psAbfrageGiroKonto.executeQuery();
+
+            if (rsAbfrageGiroKonto.next()) {
+                throw new SQLException("Ein Girokonto mit dieser Kontonummer existiert bereits.");
+            }
+
+            // Daten in die Datenbank einfügen
+            String sqlDaten = "INSERT INTO girokonto (kontoNr, kontoStand, kontoAktiv, summeEinzahlungen, summeAuszahlungen, " +
+                    "ueberziehungsLimit, negativZinssatz, positivZinssatz, spesen, kid) VALUES (?,?,?,0,0,?,?,?,?,?)";
+            PreparedStatement psDaten = con.prepareStatement(sqlDaten);
+            psDaten.setString(1, kontoNr);
+            psDaten.setDouble(2, kontoStand);
+            psDaten.setBoolean(3, kontoAktiv);
+            psDaten.setDouble(4, ueberziehungsLimit);
+            psDaten.setDouble(5, negativZinssatz);
+            psDaten.setDouble(6, positivZinssatz);
+            psDaten.setDouble(7, spesen);
+            psDaten.setInt(8, kid);
+            psDaten.executeUpdate();
+            psDaten.close();
+
+            psAbfrageGiroKonto.close();
+            rsAbfrageGiroKonto.close();
+            
+            return new GiroKonto(kontoNr, kontoStand, ueberziehungsLimit, negativZinssatz, positivZinssatz, spesen);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Ungültige Zahlenangabe in einem der Felder.");
+        }
+    }
+     */
+
+
     /**
      * Eroeffnet ein neues Girokonto fuer den Kunden.
      *
-     * @param con Die Verbindung zur Datenbank
-     * @param kid Die Kunden-ID.
-     * @param isUberweisung Gibt an, ob es sich um eine Überweisung handelt.
      * @return Das neu eroeffnete Girokonto.
      * @throws SQLException Wenn ein Datenbankfehler auftritt.
      */
-    public GiroKonto eroeffneGiroKonto(Connection con, int kid, boolean isUberweisung) throws SQLException {
-        Scanner sc = new Scanner(System.in);
-        sc.useLocale(Locale.US);
+    public GiroKonto eroeffneGiroKonto(String kontoNr, String kontoStandStr, boolean kontoAktiv,
+                                       String spesenStr, String ueberziehungsLimitStr,
+                                       String negativZinssatzStr, String positivZinssatzStr)
+            throws SQLException, IllegalArgumentException, IOException {
 
-        System.out.println("Geben Sie die KontoNr ein: ");
-        String kontoNr = sc.nextLine().toUpperCase();
+        Connection con = DBManager.getConnection();
+        int kid = getKundeID(con);
+        double kontoStand = Double.parseDouble(kontoStandStr);
+        double spesen = Double.parseDouble(spesenStr);
+        double ueberziehungsLimit = Double.parseDouble(ueberziehungsLimitStr);
+        double negativZinssatz = Double.parseDouble(negativZinssatzStr);
+        double positivZinssatz = Double.parseDouble(positivZinssatzStr);
 
-        // Überprüfung des Kontostands vor dem Einlesen
-        double tempKontoStand;
-        do {
-            System.out.println("Geben Sie den Kontostand ein: ");
-            tempKontoStand = sc.nextDouble();
-
-            if (tempKontoStand < 0) {
-                System.out.println("Ungültige Eingabe. Kontostand darf nicht negativ sein. Bitte versuchen Sie es erneut.");
-            }
-        } while (tempKontoStand < 0);
-
-        double kontoStand = tempKontoStand;
-
-        boolean kontoAktiv = true;
-
-        System.out.println("Geben Sie die Spesen für dieses GiroKonto ein: ");
-        double spesen = sc.nextDouble();
-
-        System.out.println("Geben Sie das ÜberziehungsLimit für dieses GiroKonto ein: ");
-        double ueberziehungsLimit = sc.nextDouble();
-
-        System.out.println("Geben Sie den Negativ-Zinssatz für dieses GiroKonto ein: ");
-        double negativZinssatz = sc.nextDouble();
-
-        System.out.println("Gebe Sie den Positiv-Zinssatz für dieses Konto ein: ");
-        double positivZinssatz = sc.nextDouble();
+        // Überprüfung des Kontostands
+        if (kontoStand < 0) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Kontostand Fehler");
+            alert.setHeaderText("Ungültiger Kontostand");
+            alert.setContentText("Der Kontostand darf nicht negativ sein. Bitte geben Sie einen positiven Wert ein.");
+            alert.showAndWait();
+            throw new IllegalArgumentException("Kontostand darf nicht negativ sein");
+        }
 
         // Überprüfen, ob es das Girokonto schon gibt, also ob das Girokonto schon in der Datenbank vorhanden ist
         String abfrageGiroKonto = "SELECT kontoNr FROM girokonto WHERE kontoNr = ?";
@@ -186,42 +247,14 @@ public class Kunde {
         ResultSet rsAbfrageGiroKonto = psAbfrageGiroKonto.executeQuery();
 
         if (rsAbfrageGiroKonto.next()) {
-            if (!isUberweisung) {
-                System.out.println("Das Girokonto bzw. Kontonummer des Girokontos ist schon in der Datenbank vorhanden/uebergeben.\nTippe 1 um ein neues" +
-                        " Girokonto (mit einer anderen Kontonummer) zu erstellen.\nTippe 2 um mit dem bereits vorhandenen/erstellten Girokonto weiterzuarbeiten " +
-                        "(Das geht nur wenn der Kunde mehrere Konten besitzt).");
-                int auswahlGiroKonto = sc.nextInt();
-                switch (auswahlGiroKonto) {
-                    case 1:
-                        return eroeffneGiroKonto(con, kid, isUberweisung);
-                    case 2:
-                        String giroKontoDaten = "SELECT * FROM girokonto WHERE kontoNr = ?";
-                        PreparedStatement psGiroKontoDaten = con.prepareStatement(giroKontoDaten);
-                        psGiroKontoDaten.setString(1, kontoNr);
-                        ResultSet rsGiroKontoDaten = psGiroKontoDaten.executeQuery();
-
-                        if (rsGiroKontoDaten.next()) { // Hole ich mir die einzelnen Daten vom Girokonto (also kontoNr, kontoStand, ueberziehungsLimit,
-                            // negativZinssatz, positivZinssatz, spesen) vom ResultSet
-                            String abgerufeneKontoNr = rsGiroKontoDaten.getString("kontoNr");
-                            double abgerufeneKontoStand = rsGiroKontoDaten.getDouble("kontoStand");
-                            double abgerufeneUeberziehungsLimit = rsGiroKontoDaten.getDouble("ueberziehungsLimit");
-                            double abgerufeneNegativZinssatz = rsGiroKontoDaten.getDouble("negativZinssatz");
-                            double abgerufenePositivZinssatz = rsGiroKontoDaten.getDouble("positivZinssatz");
-                            double abgerufeneneSpesen = rsGiroKontoDaten.getDouble("spesen");
-                            return new GiroKonto(abgerufeneKontoNr, abgerufeneKontoStand, abgerufeneUeberziehungsLimit, abgerufeneNegativZinssatz,
-                                    abgerufenePositivZinssatz, abgerufeneneSpesen);
-                        }
-                        psGiroKontoDaten.close();
-                        rsGiroKontoDaten.close();
-                        break;
-                }
-            }
-            else {
-                System.out.println("Das Girokonto bzw. Kontonummer des Girokontos ist schon in der Datenbank vorhanden/uebergeben. Sie müssen ein neues" +
-                        "Girokonto mit einer anderen Kontonummer erstellen");
-                return eroeffneGiroKonto(con,kid,isUberweisung);
-            }
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Girokonto Fehler");
+            alert.setHeaderText("Konto bereits vorhanden");
+            alert.setContentText("Ein Girokonto mit dieser Kontonummer existiert bereits.");
+            alert.showAndWait();
+            throw new SQLException("Ein Girokonto mit dieser Kontonummer existiert bereits.");
         }
+
         else {
             // Daten in die Datenbank einfügen
             String sqlDaten = "INSERT INTO girokonto (kontoNr, kontoStand, kontoAktiv, summeEinzahlungen, summeAuszahlungen, " +
@@ -242,12 +275,6 @@ public class Kunde {
         rsAbfrageGiroKonto.close();
         return new GiroKonto(kontoNr,kontoStand,ueberziehungsLimit,negativZinssatz,positivZinssatz,spesen);
     }
-
-    /* Diese Methode dient nur als Test für die BankTest-Klasse
-    public GiroKonto eroeffneGiroKonto(long kontoNr, double kontoStand, double spesen, double ueberziehungsLimit, double negativZinssatz, double positivZinssatz) {
-        return new GiroKonto(kontoNr,kontoStand,spesen,ueberziehungsLimit,negativZinssatz,positivZinssatz);
-    }
-     */
 
     /**
      * Eroeffnet ein neues Sparkonto fuer den Kunden.
@@ -376,39 +403,30 @@ public class Kunde {
                 "\nAusgaben: " + sparKonto.getSummeAuszahlungen() + "\nZinssatz: " + sparKonto.getZinssatz() + "\nKundeID: " + kid);
     }
 
-    public Kunde erstelleKunde(String name, String ort, String email, String id, boolean kreditwuerdig) throws SQLException {
-        Connection con = DBManager.getConnection();
-
-        String checkSQL = "SELECT * FROM kunde WHERE identifikationsNr = ?";
-        PreparedStatement checkStmt = con.prepareStatement(checkSQL);
-        checkStmt.setString(1, id);
-        ResultSet rs = checkStmt.executeQuery();
-
-        if (rs.next()) {
-            String abgerufenerName = rs.getString("name");
-            String abgerufenerOrt = rs.getString("ort");
-            String abgerufeneEmail = rs.getString("email");
-            String abgerufeneId = rs.getString("identifikationsNr");
-            boolean abgerufeneKreditw = rs.getBoolean("kreWuerdigkeit");
-
-            rs.close();
-            checkStmt.close();
-
-            return new Kunde(abgerufenerName, abgerufenerOrt, abgerufeneEmail, abgerufeneId, abgerufeneKreditw);
-        } else {
-            String insertSQL = "INSERT INTO kunde (name, ort, email, identifikationsNr, kreWuerdigkeit) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement insertStmt = con.prepareStatement(insertSQL);
-            insertStmt.setString(1, name);
-            insertStmt.setString(2, ort);
-            insertStmt.setString(3, email);
-            insertStmt.setString(4, id);
-            insertStmt.setBoolean(5, kreditwuerdig);
-            insertStmt.executeUpdate();
-            insertStmt.close();
-
-            rs.close();
-            checkStmt.close();
-            return new Kunde(name, ort, email, id, kreditwuerdig);
+    /**
+     * Gets a customer by their ID from the database.
+     *
+     * @param con The database connection
+     * @param kid The customer ID
+     * @return The customer object, or null if not found
+     * @throws SQLException If a database error occurs
+     */
+    public static Kunde getKundeById(Connection con, int kid) throws SQLException {
+        String query = "SELECT * FROM kunde WHERE kid = ?";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setInt(1, kid);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Kunde(
+                        rs.getString("name"),
+                        rs.getString("ort"),
+                        rs.getString("email"),
+                        rs.getString("identifikationsNr"),
+                        rs.getBoolean("kreWuerdigkeit")
+                    );
+                }
+            }
         }
+        return null;
     }
 }

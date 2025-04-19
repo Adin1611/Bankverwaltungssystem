@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KundenService {
+    private static Kunde kunde;
+
     private ObservableList<Kunde> kundenListe;
 
     public KundenService() {
@@ -39,7 +41,9 @@ public class KundenService {
             rs.close();
             checkStmt.close();
 
-            return new Kunde(abgerufenerName, abgerufenerOrt, abgerufeneEmail, abgerufeneId, abgerufeneKreditw);
+            Kunde kunde = new Kunde(abgerufenerName, abgerufenerOrt, abgerufeneEmail, abgerufeneId, abgerufeneKreditw);
+            KundenService.kunde = kunde;
+            return kunde;
         } else {
             String insertSQL = "INSERT INTO kunde (name, ort, email, identifikationsNr, kreWuerdigkeit) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement insertStmt = con.prepareStatement(insertSQL);
@@ -53,7 +57,10 @@ public class KundenService {
 
             rs.close();
             checkStmt.close();
-            return new Kunde(name, ort, email, id, kreditwuerdig);
+
+            Kunde kunde = new Kunde(name, ort, email, id, kreditwuerdig);
+            KundenService.kunde = kunde;
+            return kunde;
         }
     }
 
@@ -109,6 +116,33 @@ public class KundenService {
     public void setKundenListe(List<Kunde> kunden) {
         kundenListe.clear();
         kundenListe.addAll(kunden);
+    }
+
+    /**
+     * Gets a customer by their ID from the database.
+     *
+     * @param con The database connection
+     * @return The customer object, or null if not found
+     * @throws SQLException If a database error occurs
+     */
+    public static Kunde getKundeById(Connection con) throws SQLException {
+        String query = "SELECT * FROM kunde WHERE kid = ?";
+        try (PreparedStatement ps = con.prepareStatement(query)) {
+            int kid = KundenService.kunde.getKundeID(con);
+            ps.setInt(1, kid);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Kunde(
+                            rs.getString("name"),
+                            rs.getString("ort"),
+                            rs.getString("email"),
+                            rs.getString("identifikationsNr"),
+                            rs.getBoolean("kreWuerdigkeit")
+                    );
+                }
+            }
+        }
+        return null;
     }
 }
 

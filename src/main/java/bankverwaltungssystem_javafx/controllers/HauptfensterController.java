@@ -53,7 +53,7 @@ public class HauptfensterController {
     }
 
     @FXML
-    private void kundenSuchen(ActionEvent event) throws IOException, SQLException {
+    private void kundenSuchen() throws IOException, SQLException {
         String name = txtVKName.getText().trim();
         if (!name.isEmpty()) {
             kundenService = new KundenService();

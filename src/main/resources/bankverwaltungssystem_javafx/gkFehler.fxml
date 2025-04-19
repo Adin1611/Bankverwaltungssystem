@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bankverwaltungssystem.bankverwaltungssystem_javafx.GkFehler">
+<AnchorPane prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bankverwaltungssystem_javafx.controllers.GKFehlerController">
    <children>
       <Label fx:id="lblGKFehler" layoutX="75.0" layoutY="10.0" prefHeight="50.0" prefWidth="250.0" text="Girokonto-Fehler">
          <font>
