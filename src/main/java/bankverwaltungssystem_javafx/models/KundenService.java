@@ -58,8 +58,8 @@ public class KundenService {
             rs.close();
             checkStmt.close();
 
-            Kunde kunde = new Kunde(name, ort, email, id, kreditwuerdig);
-            KundenService.kunde = kunde;
+            Kunde kunde = new Kunde(name, ort, email, id, kreditwuerdig); // Wichtig: um den Kunden beim Erstellen eines Kontos zu haben
+            KundenService.kunde = kunde;                                  // (bzw. die kid darüber (über diesen Kunden) suchen zu können)
             return kunde;
         }
     }
@@ -70,17 +70,19 @@ public class KundenService {
 
         String sql = "SELECT * FROM kunde WHERE name LIKE ?";
         PreparedStatement stmt = con.prepareStatement(sql);
-        stmt.setString(1, "%" + name + "%");
+        stmt.setString(1,  name);
         ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {
-            String kundenName = rs.getString("name");
+            String kundeName = rs.getString("name");
             String ort = rs.getString("ort");
             String email = rs.getString("email");
             String id = rs.getString("identifikationsNr");
-            boolean kreditwuerdig = rs.getBoolean("kreWuerdigkeit");
+            boolean kreWuerdigkeit = rs.getBoolean("kreWuerdigkeit");
 
-            kunden.add(new Kunde(kundenName, ort, email, id, kreditwuerdig));
+            Kunde kunde = new Kunde(kundeName, ort, email, id, kreWuerdigkeit); // Wichtig: um den Kunden beim Erstellen eines Kontos zu haben
+            KundenService.kunde = kunde;                                        // (bzw. die kid darüber (über diesen Kunden) suchen zu können
+            kunden.add(kunde);
         }
 
         rs.close();

@@ -192,7 +192,7 @@
                         <Insets left="40.0" top="20.0" />
                      </VBox.margin>
                   </Label>
-                  <RadioButton fx:id="btnSKKredWuerdigkeitJa" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" text="Ja">
+                  <RadioButton fx:id="btnSKKontoAktivJa" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" text="Ja">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
@@ -203,7 +203,7 @@
                         <ToggleGroup fx:id="btnSKKontoAktiv" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton fx:id="btnSKKredWuerdigkeitNein" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" text="Nein" toggleGroup="$btnSKKontoAktiv">
+                  <RadioButton fx:id="btnSKKontoAktivNein" maxHeight="20.0" mnemonicParsing="false" prefHeight="20.0" text="Nein" toggleGroup="$btnSKKontoAktiv">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
@@ -224,7 +224,7 @@
                         <Insets left="100.0" top="-22.0" />
                      </VBox.margin>
                   </TextField>
-                  <Button fx:id="btnSKAusfuehren" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: A8A8A8;" text="Ausführen">
+                  <Button fx:id="btnSKAusfuehren" mnemonicParsing="false" onAction="#sparKontoEroeffnen" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: A8A8A8;" text="Ausführen">
                      <font>
                         <Font size="14.0" />
                      </font>

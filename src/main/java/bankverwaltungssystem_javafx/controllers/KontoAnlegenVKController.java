@@ -1,20 +1,29 @@
 package bankverwaltungssystem_javafx.controllers;
 
-import bankverwaltungssystem_javafx.models.GiroKonto;
-import bankverwaltungssystem_javafx.models.Kunde;
 import bankverwaltungssystem_javafx.application.DBManager;
 import bankverwaltungssystem_javafx.application.FensterManager;
+import bankverwaltungssystem_javafx.models.GiroKonto;
+import bankverwaltungssystem_javafx.models.Kunde;
 import bankverwaltungssystem_javafx.models.KundenService;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import bankverwaltungssystem_javafx.models.SparKonto;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
-public class KontoAnlegenNKController {
+public class KontoAnlegenVKController {
+
     @FXML
     private TextField txtGKKontoNr;
     @FXML
@@ -57,7 +66,7 @@ public class KontoAnlegenNKController {
         String ueberziehunslimit = txtGKUeberziehungslimit.getText().trim();
         String negativZinssatz = txtGKNegativZinssatz.getText().trim();
         String positivZinssatz = txtGKPositivZinssatz.getText().trim();
-        
+
         Connection con = DBManager.getConnection();
         kunde = KundenService.getKundeById(con);
         kunde.eroeffneGiroKonto(kontoNr, kontostand, kontoAktiv, spesen, ueberziehunslimit, negativZinssatz, positivZinssatz);
@@ -75,5 +84,53 @@ public class KontoAnlegenNKController {
         kunde = KundenService.getKundeById(con);
         kunde.eroeffneSparKonto(kontoNr, kontostand, kontoAktiv, zinssatz);
         FensterManager.oeffneFenster("/bankverwaltungssystem_javafx/skDashboard.fxml", "Sparkonto-Dashboard", event);
+    }
+
+    @FXML
+    private void girokontenSuchen(ActionEvent event) throws IOException, SQLException {
+        Connection con = DBManager.getConnection();
+        kunde = KundenService.getKundeById(con);
+        List<GiroKonto> gefundeneGK = kunde.sucheGiroKonto(kunde.getKundeID(con));
+
+        // Öffne das vorhandeneGirokonto Fenster
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/bankverwaltungssystem_javafx/vorhandeneGirokonto.fxml"));
+        Parent root = loader.load();
+
+        // Setze die gefundenen Girokonten in die ListView
+        VorhandeneGirokontoController controller = loader.getController();
+        controller.setGirokontenListe(gefundeneGK);
+
+        Stage stage = new Stage();
+        stage.setTitle("Gefundene Konten");
+        stage.setScene(new Scene(root));
+        stage.show();
+
+        // Braucht man sonst schließen sich die Fenster nicht richtig
+        Stage aktuellesFenster = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        aktuellesFenster.close();
+    }
+
+    @FXML
+    private void sparkontenSuchen(ActionEvent event) throws IOException, SQLException {
+        Connection con = DBManager.getConnection();
+        kunde = KundenService.getKundeById(con);
+        List<SparKonto> gefundeneSK = kunde.sucheSparKonto(kunde.getKundeID(con));
+
+        // Öffne das vorhandeneGirokonto Fenster
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/bankverwaltungssystem_javafx/vorhandeneSparkonto.fxml"));
+        Parent root = loader.load();
+
+        // Setze die gefundenen Girokonten in die ListView
+        VorhandeneSparkontoController controller = loader.getController();
+        controller.setSparkontenListe(gefundeneSK);
+
+        Stage stage = new Stage();
+        stage.setTitle("Gefundene Konten");
+        stage.setScene(new Scene(root));
+        stage.show();
+
+        // Braucht man sonst schließen sich die Fenster nicht richtig
+        Stage aktuellesFenster = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        aktuellesFenster.close();
     }
 }

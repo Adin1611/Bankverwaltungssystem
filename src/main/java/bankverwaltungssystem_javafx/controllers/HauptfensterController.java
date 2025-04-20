@@ -4,6 +4,7 @@ import bankverwaltungssystem_javafx.application.FensterManager;
 import bankverwaltungssystem_javafx.models.Kunde;
 import bankverwaltungssystem_javafx.models.KundenService;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -41,9 +42,9 @@ public class HauptfensterController {
 
     @FXML
     private void neuenKundenErstellen(ActionEvent event) throws SQLException, IOException {
-        String name = txtNKName.getText().trim();
-        String ort = txtNKOrt.getText().trim();
-        String email = txtNKEmail.getText().trim();
+        String name = txtNKName.getText().toLowerCase().trim();
+        String ort = txtNKOrt.getText().toLowerCase().trim();
+        String email = txtNKEmail.getText().toLowerCase().trim();
         String id = txtNKID.getText().trim();
         boolean kreWuerdigkeit = btnNKKredWuerdigkeitJa.isSelected();
 
@@ -53,12 +54,12 @@ public class HauptfensterController {
     }
 
     @FXML
-    private void kundenSuchen() throws IOException, SQLException {
-        String name = txtVKName.getText().trim();
+    private void kundenSuchen(ActionEvent event) throws IOException, SQLException {
+        String name = txtVKName.getText().toLowerCase().trim();
         if (!name.isEmpty()) {
             kundenService = new KundenService();
             List<Kunde> gefundeneKunden = kundenService.sucheKunde(name);
-            
+
             // Öffne das vorhandeneKunde Fenster
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/bankverwaltungssystem_javafx/vorhandeneKunde.fxml"));
             Parent root = loader.load();
@@ -66,11 +67,16 @@ public class HauptfensterController {
             // Setze die gefundenen Kunden in die ListView
             VorhandeneKundeController controller = loader.getController();
             controller.setKundenListe(gefundeneKunden);
-            
+
             Stage stage = new Stage();
             stage.setTitle("Gefundene Kunde(n)");
             stage.setScene(new Scene(root));
             stage.show();
+
+            // Braucht man sonst schließen sich die Fenster nicht richtig
+            Stage aktuellesFenster = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            aktuellesFenster.close();
+
         }
     }
 }

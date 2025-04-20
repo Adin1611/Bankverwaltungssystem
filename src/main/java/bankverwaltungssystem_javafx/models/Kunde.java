@@ -4,17 +4,24 @@ import bankverwaltungssystem_javafx.application.DBManager;
 import bankverwaltungssystem_javafx.application.FensterManager;
 import bankverwaltungssystem_javafx.controllers.VorhandeneKundeController;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -50,6 +57,9 @@ public class Kunde {
      */
     private boolean kreWuerdigkeit;
 
+    private ObservableList<GiroKonto> girokontenListe;
+    private ObservableList<SparKonto> sparkontenListe;
+
 
     /**
      * Erzeugt ein Kunde-Objekt und initialisiert es mit Benutzereingaben.
@@ -66,6 +76,9 @@ public class Kunde {
         this.email = email;
         this.identifikationsNr = identifikationsNr;
         this.kreWuerdigkeit = kreWuerdigkeit;
+
+        this.girokontenListe = FXCollections.observableArrayList();
+        this.sparkontenListe = FXCollections.observableArrayList();
     }
 
     /* Dieser Konstruktor dient nur als Test für die BankTest-Klasse
@@ -108,7 +121,7 @@ public class Kunde {
     /**
      * Liefert die Kunden-ID anhand der Identifikationsnummer aus der Datenbank.
      *
-     * @param con Die Verbindun zur Datenbank
+     * @param con Die Verbindung zur Datenbank
      * @return Die Kunden-ID.
      * @throws SQLException Wenn ein Datenbankfehler auftritt.
      */
@@ -153,7 +166,7 @@ public class Kunde {
     public GiroKonto eroeffneGiroKonto(String kontoNr, String kontoStandStr, boolean kontoAktiv,
                                        String spesenStr, String ueberziehungsLimitStr,
                                        String negativZinssatzStr, String positivZinssatzStr)
-            throws SQLException, IllegalArgumentException, IOException {
+                                       throws SQLException, IllegalArgumentException {
 
         Connection con = DBManager.getConnection();
         int kid = getKundeID(con);
@@ -209,82 +222,110 @@ public class Kunde {
         return new GiroKonto(kontoNr,kontoStand,ueberziehungsLimit,negativZinssatz,positivZinssatz,spesen);
     }
 
+    public List<GiroKonto> sucheGiroKonto(int kid) throws SQLException {
+        List<GiroKonto> girokonten = new ArrayList<>();
+        Connection con = DBManager.getConnection();
+
+        String sql = "SELECT * FROM girokonto WHERE kid = ?";
+        PreparedStatement stmt = con.prepareStatement(sql);
+        stmt.setInt(1, kid);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            String kontoNr = rs.getString("kontoNr");
+            double kontoStand = rs.getDouble("kontoStand");
+            double summeEinzahlungen = rs.getDouble("summeEinzahlungen");
+            double summeAuszahlungen = rs.getDouble("summeAuszahlungen");
+            double ueberziehungsLimit = rs.getDouble("ueberziehungsLimit");
+            double negativZinssatz = rs.getDouble("negativZinssatz");
+            double positivZinssatz = rs.getDouble("positivZinssatz");
+            double spesen = rs.getDouble("spesen");
+
+            GiroKonto girokonto = new GiroKonto(kontoNr, kontoStand, ueberziehungsLimit, 
+                                              negativZinssatz, positivZinssatz, spesen);
+            girokonto.setSummeEinzahlungen(summeEinzahlungen); // Wichtig: ohne dem würden die bereits zuvor getätigten Einzahlungen (summeEinzahlungen) bzw.
+            girokonto.setSummeAuszahlungen(summeAuszahlungen); // die zuvor getätigten Auszahlungen (summeAuszahlungen) nicht selected werden (also summeEinzahlungen/summeAuszahlungen
+                                                               // wären immer 0, obwohl sie zuvor eigentlich schon Einzahlungen/Auszahlungen geschehen sind)
+            girokonten.add(girokonto);
+        }
+
+        rs.close();
+        stmt.close();
+        return girokonten;
+    }
+
+    public void initialisiereListViewGK(ListView<GiroKonto> listView) {
+        listView.setItems(girokontenListe);
+        
+        // Setze den CellFactory für die ListView
+        listView.setCellFactory(new Callback<ListView<GiroKonto>, ListCell<GiroKonto>>() {
+            @Override
+            public ListCell<GiroKonto> call(ListView<GiroKonto> param) {
+                return new ListCell<GiroKonto>() {
+                    @Override
+                    protected void updateItem(GiroKonto giroKonto, boolean empty) {
+                        super.updateItem(giroKonto, empty);
+                        if (empty || giroKonto == null) {
+                            setText(null);
+                        } else {
+                            setText(String.format("%s (Kontostand: %s)",
+                                giroKonto.getKontoNr(),
+                                giroKonto.getKontoStand()));
+                        }
+                    }
+                };
+            }
+        });
+    }
+
+    public void setGirokontenListe(List<GiroKonto> girokonten) {
+        girokontenListe.clear();
+        girokontenListe.addAll(girokonten);
+    }
+
     /**
      * Eroeffnet ein neues Sparkonto fuer den Kunden.
      *
-     * @param con Die Verbindung zur Datenbank.
-     * @param kid Die Kunden-ID.
-     * @param isUeberweisung Gibt an, ob es sich um eine Überweisung handelt.
      * @return Das neu eroeffnete Sparkonto.
      * @throws SQLException Wenn ein Datenbankfehler auftritt.
      */
-    public SparKonto eroeffneSparKonto(Connection con, int kid, boolean isUeberweisung) throws SQLException{
-        Scanner sc = new Scanner(System.in);
-        sc.useLocale(Locale.US);
+    public SparKonto eroeffneSparKonto(String kontoNr, String kontoStandStr, boolean kontoAktiv, String zinssatzStr)
+                                       throws SQLException, IllegalArgumentException{
 
-        System.out.println("Geben Sie die KontoNr ein: ");
-        String kontoNr = sc.nextLine().toUpperCase();
+        Connection con = DBManager.getConnection();
+        int kid = getKundeID(con);
+        double kontoStand = Double.parseDouble(kontoStandStr);
+        double zinssatz = Double.parseDouble(zinssatzStr);
 
-        // Überprüfung des Kontostands vor dem Einlesen
-        double tempKontoStand;
-        do {
-            System.out.println("Geben Sie den Kontostand ein: ");
-            tempKontoStand = sc.nextDouble();
+        // Überprüfung des Kontostands
+        if (kontoStand < 0) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Kontostand-Fehler");
+            alert.setHeaderText("Ungültiger Kontostand");
+            alert.setContentText("Der Kontostand darf nicht negativ sein. Bitte geben Sie einen positiven Wert ein.");
+            alert.showAndWait();
+            throw new IllegalArgumentException("Kontostand darf nicht negativ sein");
+        }
 
-            if (tempKontoStand < 0) {
-                System.out.println("Ungültige Eingabe. Kontostand darf nicht negativ sein. Bitte versuchen Sie es erneut.");
-            }
-        } while (tempKontoStand < 0);
-
-        double kontoStand = tempKontoStand;
-
-        boolean kontoAktiv = true;
-
-        System.out.println("Geben Sie den Zinssatz für dieses Sparkonto ein: ");
-        double zinssatz = sc.nextDouble();
-
-        // Überprüfen ob es das Sparkonto schon gibt, also ob das Sparkonto schon in der Datenbank vorhanden ist
+        // Überprüfen, ob es das Girokonto schon gibt, also ob das Girokonto schon in der Datenbank vorhanden ist
         String abfrageSparKonto = "SELECT kontoNr FROM sparkonto WHERE kontoNr = ?";
         PreparedStatement psAbfrageSparKonto = con.prepareStatement(abfrageSparKonto);
         psAbfrageSparKonto.setString(1, kontoNr);
         ResultSet rsAbfrageSparKonto = psAbfrageSparKonto.executeQuery();
 
         if (rsAbfrageSparKonto.next()) {
-            if (!isUeberweisung) {
-                System.out.println("Das Sparkonto bzw. die Kontonummer des Sparkontos ist schon in der Datenbank vorhanden/uebergeben.\nTippe 1 um ein neues" +
-                        " Sparkonto (mit einer anderen Kontonummer) zu erstellen.\nTippe 2 um mit dem bereits vorhandenen/erstellten Sparkonto weiterzuarbeiten" +
-                        "(Das geht nur wenn der Kunde mehrere Konten besitzt).");
-                int auswahlSparKonto = sc.nextInt();
-                switch (auswahlSparKonto) {
-                    case 1:
-                        return eroeffneSparKonto(con, kid, isUeberweisung);
-                    case 2:
-                        String sparKontoDaten = "SELECT * FROM sparkonto WHERE kontoNr = ?";
-                        PreparedStatement psSparKontoDaten = con.prepareStatement(sparKontoDaten);
-                        psSparKontoDaten.setString(1, kontoNr);
-                        ResultSet rsSparKontoDaten = psSparKontoDaten.executeQuery();
-
-                        if (rsSparKontoDaten.next()) { // Hole ich mir die einzelnen Daten vom Sparkonto (also kontoNr, kontoStand, kid) vom ResultSet
-                            String abgerufeneKontoNr = rsSparKontoDaten.getString("kontoNr");
-                            double abgerufeneKontoStand = rsSparKontoDaten.getDouble("kontoStand");
-                            double abgerufeneZinssatz = rsSparKontoDaten.getDouble("zinssatz");
-
-                            return new SparKonto(abgerufeneKontoNr, abgerufeneKontoStand, abgerufeneZinssatz);
-                        }
-                        psSparKontoDaten.close();
-                        rsSparKontoDaten.close();
-                        break;
-                }
-            }
-            else{
-                System.out.println("Das Sparkonto bzw. Kontonummer des Sparkontos ist schon in der Datenbank vorhanden/uebergeben. Sie müssen ein neues" +
-                        "Sparkonto mit einer anderen Kontonummer erstellen");
-                return eroeffneSparKonto(con,kid,isUeberweisung);
-            }
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Sparkonto-Fehler");
+            alert.setHeaderText("Konto bereits vorhanden");
+            alert.setContentText("Ein Sparkonto mit dieser Kontonummer existiert bereits.");
+            alert.showAndWait();
+            throw new SQLException("Ein Sparkonto mit dieser Kontonummer existiert bereits.");
         }
+
         else {
             // Daten in die Datenbank einfügen
-            String sqlDaten = "INSERT INTO sparkonto (kontoNr,kontoStand, kontoAktiv, summeEinzahlungen, summeAuszahlungen, zinssatz, kid) VALUES (?,?,?,0,0,?,?)";
+            String sqlDaten = "INSERT INTO sparkonto (kontoNr, kontoStand, kontoAktiv, summeEinzahlungen, summeAuszahlungen, " +
+                    "zinssatz, kid) VALUES (?,?,?,0,0,?,?)";
             PreparedStatement psDaten = con.prepareStatement(sqlDaten);
             psDaten.setString(1, kontoNr);
             psDaten.setDouble(2, kontoStand);
@@ -294,17 +335,67 @@ public class Kunde {
             psDaten.executeUpdate();
             psDaten.close();
         }
-
         psAbfrageSparKonto.close();
         rsAbfrageSparKonto.close();
         return new SparKonto(kontoNr,kontoStand,zinssatz);
     }
 
-    /* Diese Methode dient nur als Test für die BankTest-Klasse
-    public SparKonto eroeffneSparKonto(long kontoNr, double kontoStand, double positivZinssatz){
-        return new SparKonto(kontoNr,kontoStand,positivZinssatz);
+    public List<SparKonto> sucheSparKonto(int kid) throws SQLException {
+        List<SparKonto> sparkonten = new ArrayList<>();
+        Connection con = DBManager.getConnection();
+
+        String sql = "SELECT * FROM sparkonto WHERE kid = ?";
+        PreparedStatement stmt = con.prepareStatement(sql);
+        stmt.setInt(1, kid);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            String kontoNr = rs.getString("kontoNr");
+            double kontoStand = rs.getDouble("kontoStand");
+            double summeEinzahlungen = rs.getDouble("summeEinzahlungen");
+            double summeAuszahlungen = rs.getDouble("summeAuszahlungen");
+            double zinssatz = rs.getDouble("zinssatz");
+
+            SparKonto sparkonto = new SparKonto(kontoNr, kontoStand, zinssatz);
+            sparkonto.setSummeEinzahlungen(summeEinzahlungen); // Wichtig: ohne dem würden die bereits zuvor getätigten Einzahlungen (summeEinzahlungen) bzw.
+            sparkonto.setSummeAuszahlungen(summeAuszahlungen); // die zuvor getätigten Auszahlungen (summeAuszahlungen) nicht selected werden (also summeEinzahlungen/summeAuszahlungen
+                                                               // wären immer 0, obwohl sie zuvor eigentlich schon Einzahlungen/Auszahlungen geschehen sind)
+            sparkonten.add(sparkonto);
+        }
+
+        rs.close();
+        stmt.close();
+        return sparkonten;
     }
-     */
+
+    public void initialisiereListViewSK(ListView<SparKonto> listView) {
+        listView.setItems(sparkontenListe);
+
+        // Setze den CellFactory für die ListView
+        listView.setCellFactory(new Callback<ListView<SparKonto>, ListCell<SparKonto>>() {
+            @Override
+            public ListCell<SparKonto> call(ListView<SparKonto> param) {
+                return new ListCell<SparKonto>() {
+                    @Override
+                    protected void updateItem(SparKonto sparKonto, boolean empty) {
+                        super.updateItem(sparKonto, empty);
+                        if (empty || sparKonto == null) {
+                            setText(null);
+                        } else {
+                            setText(String.format("%s (Kontostand: %s)",
+                                    sparKonto.getKontoNr(),
+                                    sparKonto.getKontoStand()));
+                        }
+                    }
+                };
+            }
+        });
+    }
+
+    public void setSparkontenListe(List<SparKonto> sparkonten) {
+        sparkontenListe.clear();
+        sparkontenListe.addAll(sparkonten);
+    }
 
     /**
      * Druckt einen Kontoauszug fuer das angegebene Girokonto des Kunden.
@@ -334,32 +425,5 @@ public class Kunde {
         System.out.println("Name: " + name + "\nOrt: " + ort + "\nEmail: " + email + "\nIdentifikationsNr: " + identifikationsNr + "\nKreditwürdigkeit (true/false): " + kreWuerdigkeit + "\nKontoNr: " + sparKonto.getKontoNr() +
                 "\nKontostand: " + sparKonto.getKontoStand() + "\nKontoAktiv (true/false): " + sparKonto.isKontoAktiv() + "\nEinnahmen: " + sparKonto.getSummeEinzahlungen() +
                 "\nAusgaben: " + sparKonto.getSummeAuszahlungen() + "\nZinssatz: " + sparKonto.getZinssatz() + "\nKundeID: " + kid);
-    }
-
-    /**
-     * Gets a customer by their ID from the database.
-     *
-     * @param con The database connection
-     * @param kid The customer ID
-     * @return The customer object, or null if not found
-     * @throws SQLException If a database error occurs
-     */
-    public static Kunde getKundeById(Connection con, int kid) throws SQLException {
-        String query = "SELECT * FROM kunde WHERE kid = ?";
-        try (PreparedStatement ps = con.prepareStatement(query)) {
-            ps.setInt(1, kid);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return new Kunde(
-                        rs.getString("name"),
-                        rs.getString("ort"),
-                        rs.getString("email"),
-                        rs.getString("identifikationsNr"),
-                        rs.getBoolean("kreWuerdigkeit")
-                    );
-                }
-            }
-        }
-        return null;
     }
 }

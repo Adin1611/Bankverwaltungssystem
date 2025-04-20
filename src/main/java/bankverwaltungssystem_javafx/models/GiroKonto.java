@@ -119,6 +119,16 @@ public class GiroKonto extends Konto {
         return summeAuszahlungen;
     }
 
+    @Override
+    public void setSummeEinzahlungen(double summeEinzahlungen){
+        this.summeEinzahlungen = summeEinzahlungen;
+    }
+
+    @Override
+    public void setSummeAuszahlungen(double summeAuszahlungen){
+        this.summeAuszahlungen = summeAuszahlungen;
+    }
+
     /**
      * Gibt das Ueberziehungslimit des Girokontos zurueck.
      *

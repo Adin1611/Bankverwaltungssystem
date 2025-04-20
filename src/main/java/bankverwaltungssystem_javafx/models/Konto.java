@@ -89,6 +89,8 @@ public abstract class Konto {
      */
     public abstract double getSummeAuszahlungen();
 
+    public abstract void setSummeEinzahlungen(double summeEinzahlungen);
+    public abstract void setSummeAuszahlungen(double summeAuszahlungen);
     /**
      * Abstrakte Methode zum Durchfuehren einer Auszahlung von einem Konto.
      *

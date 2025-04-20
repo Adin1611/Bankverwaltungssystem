@@ -82,6 +82,15 @@ public class SparKonto extends Konto{
         return zinssatz;
     }
 
+    @Override
+    public void setSummeEinzahlungen(double summeEinzahlungen){
+        this.summeEinzahlungen = summeEinzahlungen;
+    }
+
+    @Override
+    public void setSummeAuszahlungen(double summeAuszahlungen){
+        this.summeAuszahlungen = summeAuszahlungen;
+    }
     /**
      * {@inheritDoc}
      */

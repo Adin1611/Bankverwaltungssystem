@@ -1,4 +1,4 @@
 package bankverwaltungssystem_javafx.controllers;
 
-public class GKFehlerController {
+public class SKDashboardController {
 }
