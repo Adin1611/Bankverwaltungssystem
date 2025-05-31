@@ -1,6 +1,12 @@
 package bankverwaltungssystem_javafx.models;
 
+import bankverwaltungssystem_javafx.application.DBManager;
+import bankverwaltungssystem_javafx.application.KontoObserver;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -85,21 +91,32 @@ public class SparKonto extends Konto{
     @Override
     public void setSummeEinzahlungen(double summeEinzahlungen){
         this.summeEinzahlungen = summeEinzahlungen;
+        KontoObserver.notifyListeners();
     }
 
     @Override
     public void setSummeAuszahlungen(double summeAuszahlungen){
         this.summeAuszahlungen = summeAuszahlungen;
+        KontoObserver.notifyListeners();
     }
+
+    /*
+    @Override
+    public void setKontoStand(double kontoStand){
+        this.kontoStand = kontoStand;
+        KontoObserver.notifyListeners();
+    }
+     */
     /**
      * {@inheritDoc}
      */
     @Override
-    public void auszahlen(double betrag, Connection con) throws SQLException {
+    public void auszahlen(double betrag) throws SQLException {
         if (isKontoAktiv()) {
             if (betrag > kontoStand) {
                 System.out.println("Man kann nicht auszahlen, da zu wenig Geld auf dem Konto vorhanden ist");
             } else {
+                Connection con = DBManager.getConnection();
                 System.out.println("Kontostand nach Auszahlung: " + (kontoStand -= betrag));
                 summeAuszahlungen += betrag;
 
@@ -118,6 +135,9 @@ public class SparKonto extends Konto{
                 updateSummeAuszahlungenSparkontoStatement.setString(2, this.kontoNr);
                 updateSummeAuszahlungenSparkontoStatement.executeUpdate();
                 updateSummeAuszahlungenSparkontoStatement.close();
+
+                // Benachrichtige Observer über die Änderung
+                KontoObserver.notifyListeners();
             }
         }else{
             System.out.println("Eine Auszahlung ist nicht möglich da das Konto inaktiv ist");
@@ -128,7 +148,8 @@ public class SparKonto extends Konto{
      * {@inheritDoc}
      */
     @Override
-    public void ueberweisen(double betrag, Konto konto, Connection con, String kontoNrVersender, String kontoNrEmpfaenger) throws SQLException{
+    public void ueberweisen(double betrag, Konto konto, String kontoNrVersender, String kontoNrEmpfaenger) throws SQLException{
+        Connection con = DBManager.getConnection();
         if (konto.isKontoAktiv() && (kontoStand >= betrag)) {
 
             if (konto instanceof GiroKonto) {
@@ -189,6 +210,9 @@ public class SparKonto extends Konto{
             updateSummeAuszahlungenVersenderkontoSparkontoStatement.setString(2, kontoNrVersender);
             updateSummeAuszahlungenVersenderkontoSparkontoStatement.executeUpdate();
             updateSummeAuszahlungenVersenderkontoSparkontoStatement.close();
+
+            // Benachrichtige Observer über die Änderung
+            KontoObserver.notifyListeners();
         }else{
             System.out.println("Die Überweisung konnte nicht durchgeführt werden. Das Zielkonto ist nicht aktiv oder es ist zu wenig Geld auf dem Konto.");
         }
@@ -198,15 +222,32 @@ public class SparKonto extends Konto{
      * {@inheritDoc}
      */
     @Override
-    public void berechneZinsen(Connection con) throws SQLException{
-        System.out.println("Kontostand nach Berücksichtigung der Zinsen: " + String.format("%.2f", kontoStand = kontoStand * (1 + (zinssatz * 0.01))).replace(",","."));
-        // Update kontostand vom jeweiligen Konto nach Zinsen in der Sparkonto-Tabelle
-        String updateKontostandNachPositivZinsenSparkontoSQL = "UPDATE sparkonto SET kontostand = kontostand * (1 + (? * 0.01)) WHERE kontoNr = ?";
-        PreparedStatement updateKontostandNachPositivZinsenSparkontoStatement = con.prepareStatement(updateKontostandNachPositivZinsenSparkontoSQL);
-        updateKontostandNachPositivZinsenSparkontoStatement.setDouble(1, zinssatz);
-        updateKontostandNachPositivZinsenSparkontoStatement.setString(2, this.kontoNr);
-        updateKontostandNachPositivZinsenSparkontoStatement.executeUpdate();
-        updateKontostandNachPositivZinsenSparkontoStatement.close();
+    public void berechneZinsen() throws SQLException{
+        Connection con = DBManager.getConnection();
+        if (isKontoAktiv()) {
+            kontoStand = kontoStand * (1 + (zinssatz * 0.01));
+            // Update kontostand vom jeweiligen Konto nach Zinsen in der Sparkonto-Tabelle
+            String updateKontostandNachPositivZinsenSparkontoSQL = "UPDATE sparkonto SET kontostand = kontostand * (1 + (? * 0.01)) WHERE kontoNr = ?";
+            PreparedStatement updateKontostandNachPositivZinsenSparkontoStatement = con.prepareStatement(updateKontostandNachPositivZinsenSparkontoSQL);
+            updateKontostandNachPositivZinsenSparkontoStatement.setDouble(1, zinssatz);
+            updateKontostandNachPositivZinsenSparkontoStatement.setString(2, this.kontoNr);
+            updateKontostandNachPositivZinsenSparkontoStatement.executeUpdate();
+            updateKontostandNachPositivZinsenSparkontoStatement.close();
+
+            // Benachrichtige Observer über die Änderung
+            KontoObserver.notifyListeners();
+        }else{
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Fehler bei Zins-Berechnung");
+                    alert.setHeaderText("Konto inaktiv");
+                    alert.setContentText("Eine Zins-Berechnung ist nicht möglich, da das Konto inaktiv ist");
+                    alert.showAndWait();
+                }
+            });
+        }
     }
 
     /**
@@ -235,5 +276,8 @@ public class SparKonto extends Konto{
         updateSummeEinzahlungenNachEinzahlungSparkontoStatement.setString(2, this.kontoNr);
         updateSummeEinzahlungenNachEinzahlungSparkontoStatement.executeUpdate();
         updateSummeEinzahlungenNachEinzahlungSparkontoStatement.close();
+
+        // Benachrichtige Observer über die Änderung
+        KontoObserver.notifyListeners();
     }
 }

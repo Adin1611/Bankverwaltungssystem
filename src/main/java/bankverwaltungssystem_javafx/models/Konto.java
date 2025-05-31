@@ -1,5 +1,7 @@
 package bankverwaltungssystem_javafx.models;
 
+import javafx.beans.property.SimpleDoubleProperty;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -91,6 +93,7 @@ public abstract class Konto {
 
     public abstract void setSummeEinzahlungen(double summeEinzahlungen);
     public abstract void setSummeAuszahlungen(double summeAuszahlungen);
+    //public abstract void setKontoStand(double kontostand);
     /**
      * Abstrakte Methode zum Durchfuehren einer Auszahlung von einem Konto.
      *
@@ -98,7 +101,7 @@ public abstract class Konto {
      * @param con Die Verbindung zur Datenbank.
      * @throws SQLException Wenn ein Datenbankfehler auftritt.
      */
-    public abstract void auszahlen(double betrag, Connection con) throws SQLException;
+    public abstract void auszahlen(double betrag) throws SQLException;
 
     /**
      * Abstrakte Methode zum Durchfuehren einer Ueberweisung von diesem Konto auf ein anderes Konto.
@@ -110,7 +113,7 @@ public abstract class Konto {
      * @param kontoNrEmpfaenger Die Kontonummer des empfangenden Kontos.
      * @throws SQLException Wenn ein Datenbankfehler auftritt.
      */
-    public abstract void ueberweisen(double betrag, Konto konto, Connection con, String kontoNrVersender, String kontoNrEmpfaenger) throws SQLException;
+    public abstract void ueberweisen(double betrag, Konto konto, String kontoNrVersender, String kontoNrEmpfaenger) throws SQLException;
 
     /**
      * Abstrakte Methode zur Berechnung der jeweiligen Zinsen fuer das Konto.
@@ -118,5 +121,5 @@ public abstract class Konto {
      * @param con Die Verbindung zur Datenbank.
      * @throws SQLException Wenn ein Datenbankfehler auftritt.
      */
-    public abstract void berechneZinsen(Connection con) throws SQLException;
+    public abstract void berechneZinsen() throws SQLException;
 }

@@ -146,5 +146,50 @@ public class KundenService {
         }
         return null;
     }
+
+    /**
+     * Gets a Konto object by its account number from the database.
+     *
+     * @param con The database connection
+     * @param kontoNr The account number to search for
+     * @return The Konto object if found, null otherwise
+     * @throws SQLException If a database error occurs
+     */
+    public static Konto getKontoByKontoNr(Connection con, String kontoNr) throws SQLException {
+        // Als schauen, ob es Girokonto ist
+        String queryGK = "SELECT * FROM girokonto WHERE kontoNr = ?";
+        try (PreparedStatement ps = con.prepareStatement(queryGK)) {
+            ps.setString(1, kontoNr);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new GiroKonto(
+                        rs.getString("kontoNr"),
+                        rs.getDouble("kontoStand"),
+                        rs.getDouble("ueberziehungsLimit"),
+                        rs.getDouble("negativZinssatz"),
+                        rs.getDouble("positivZinssatz"),
+                        rs.getDouble("spesen")
+                    );
+                }
+            }
+        }
+
+        // Dann schauen, ob es SparKonto ist
+        String querySK = "SELECT * FROM sparkonto WHERE kontoNr = ?";
+        try (PreparedStatement ps = con.prepareStatement(querySK)) {
+            ps.setString(1, kontoNr);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new SparKonto(
+                        rs.getString("kontoNr"),
+                        rs.getDouble("kontoStand"),
+                        rs.getDouble("zinssatz")
+                    );
+                }
+            }
+        }
+
+        return null;
+    }
 }
 

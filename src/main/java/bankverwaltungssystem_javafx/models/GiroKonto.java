@@ -1,5 +1,11 @@
 package bankverwaltungssystem_javafx.models;
 
+import bankverwaltungssystem_javafx.application.DBManager;
+import bankverwaltungssystem_javafx.application.KontoObserver;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.beans.property.SimpleDoubleProperty;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -28,6 +34,7 @@ public class GiroKonto extends Konto {
      * Die Spesen, die mit dem Girokonto verbunden sind.
      */
     private double spesen;
+
 
     /**
      * Erzeugt ein GiroKonto-Objekt und initialisiert es mit Benutzereingaben.
@@ -122,12 +129,22 @@ public class GiroKonto extends Konto {
     @Override
     public void setSummeEinzahlungen(double summeEinzahlungen){
         this.summeEinzahlungen = summeEinzahlungen;
+        KontoObserver.notifyListeners();
     }
 
     @Override
     public void setSummeAuszahlungen(double summeAuszahlungen){
         this.summeAuszahlungen = summeAuszahlungen;
+        KontoObserver.notifyListeners();
     }
+
+    /*
+    @Override
+    public void setKontoStand(double kontoStand) {
+        this.kontoStand = kontoStand;
+        KontoObserver.notifyListeners();
+    }
+     */
 
     /**
      * Gibt das Ueberziehungslimit des Girokontos zurueck.
@@ -169,12 +186,26 @@ public class GiroKonto extends Konto {
      * {@inheritDoc}
      */
     @Override
-    public void auszahlen(double betrag, Connection con) throws SQLException {
+    public void auszahlen(double betrag) throws SQLException {
+        Connection con = DBManager.getConnection();
         if (isKontoAktiv()) {
             if (betrag > (kontoStand + this.ueberziehungsLimit)) {
-                System.out.println("Man kann nicht auszahlen, da das Überziehungslimit bei diesem Konto überschritten wurde");
-            }else{
-                System.out.println("Kontostand nach Auszahlung: " + (kontoStand -= betrag));
+                // Platform.runLater() wird benötigt, weil:
+                // 1. JavaFX erfordert, dass alle UI-Operationen auf dem JavaFX Application Thread ausgeführt werden
+                // 2. Die auszahlen()-Methode wird möglicherweise von einem anderen Thread aufgerufen
+                // 3. Ohne Platform.runLater() würde eine IllegalStateException mit "Not on FX application thread" geworfen werden
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Fehler bei Auszahlung");
+                        alert.setHeaderText("Überziehungslimit überschritten");
+                        alert.setContentText("Die Auszahlung kann nicht durchgeführt werden, da das Überziehungslimit überschritten würde.");
+                        alert.showAndWait();
+                    }
+                });
+            } else {
+                kontoStand -= betrag;
                 summeAuszahlungen += betrag;
 
                 // Update kontoStand vom jeweiligen Kunden nach Auszahlung in der Girokonto-Tabelle
@@ -192,9 +223,22 @@ public class GiroKonto extends Konto {
                 updateSummeAuszahlungenGirokontoStatement.setString(2, this.kontoNr);
                 updateSummeAuszahlungenGirokontoStatement.executeUpdate();
                 updateSummeAuszahlungenGirokontoStatement.close();
+
+                // Benachrichtige Observer über die Änderung
+                KontoObserver.notifyListeners();
+                DBManager.closeConnection();
             }
-        }else{
-            System.out.println("Eine Auszahlung ist nicht möglich da das Konto inaktiv ist");
+        } else {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Fehler bei Auszahlung");
+                    alert.setHeaderText("Konto inaktiv");
+                    alert.setContentText("Eine Auszahlung ist nicht möglich, da das Konto inaktiv ist.");
+                    alert.showAndWait();
+                }
+            });
         }
     }
 
@@ -202,11 +246,12 @@ public class GiroKonto extends Konto {
      * {@inheritDoc}
      */
     @Override
-    public void ueberweisen(double betrag, Konto konto, Connection con, String kontoNrVersender, String kontoNrEmpfaenger) throws SQLException{
-        if (konto.isKontoAktiv() && (kontoStand >= (ueberziehungsLimit *- 1))) { // *-1 damit ich den positiven ÜberziehungsLimit auf einen negativen Überziehungs-
-            // limit verwandele -> Grund: Vergleich
+    public void ueberweisen(double betrag, Konto konto, String kontoNrVersender, String kontoNrEmpfaenger) throws SQLException{
+        Connection con = DBManager.getConnection();
+        if (konto.isKontoAktiv() && ((kontoStand + ueberziehungsLimit) >= betrag)) { // *-1 damit ich den positiven ÜberziehungsLimit auf einen negativen Überziehungs-limit verwandele -> Grund: Vergleich
+
             if (konto instanceof GiroKonto) {
-                System.out.println("Zielkonto Kontostand: " + (konto.kontoStand += betrag));
+                konto.kontoStand += betrag;
                 konto.summeEinzahlungen += betrag;
 
                 // Update kontostand vom Empfängerkonto in der Girokonto-Tabelle
@@ -226,7 +271,7 @@ public class GiroKonto extends Konto {
                 updateSummeEinzahlungenEmpfaengerkontoGirokontoStatement.close();
             }
             else if (konto instanceof SparKonto){
-                System.out.println("Zielkonto Kontostand: " + (konto.kontoStand += betrag));
+                konto.kontoStand += betrag;
                 konto.summeEinzahlungen += betrag;
 
                 // Update kontostand vom Empfängerkonto in der Sparkonto-Tabelle
@@ -246,7 +291,7 @@ public class GiroKonto extends Konto {
                 updateSummeEinzahlungenEmpfaengerkontoSparkontoStatement.close();
             }
 
-            System.out.println("Versender-Konto Kontostand: " + (kontoStand -= betrag));
+            kontoStand -= betrag;
             summeAuszahlungen += betrag;
             // Update kontostand vom Versenderkonto in der Girokonto-Tabelle
             String updateKontostandVersenderkontoGirokontoSQL = "UPDATE girokonto SET kontostand = kontostand - ? WHERE kontoNr = ?";
@@ -262,8 +307,21 @@ public class GiroKonto extends Konto {
             updateSummeAuszahlungenVersenderkontoGirokontoStatement.setString(2, kontoNrVersender);
             updateSummeAuszahlungenVersenderkontoGirokontoStatement.executeUpdate();
             updateSummeAuszahlungenVersenderkontoGirokontoStatement.close();
+
+            // Benachrichtige Observer über die Änderung
+            KontoObserver.notifyListeners();
+            DBManager.closeConnection();
         }else{
-            System.out.println("Die Überweisung konnte nicht durchgeführt werden. Das Zielkonto ist nicht aktiv.");
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Fehler bei Überweisung");
+                    alert.setHeaderText("Konto inaktiv oder Kontostand zu niedrig");
+                    alert.setContentText("Eine Überweisung ist nicht möglich, da das Zielkonto inaktiv ist oder der Kontostand zu niedrig");
+                    alert.showAndWait();
+                }
+            });
         }
     }
 
@@ -271,10 +329,11 @@ public class GiroKonto extends Konto {
      * {@inheritDoc}
      */
     @Override
-    public void berechneZinsen(Connection con) throws SQLException{
+    public void berechneZinsen() throws SQLException {
+        Connection con = DBManager.getConnection();
         if (isKontoAktiv()) {
             if (kontoStand < 0) {
-                System.out.println("Kontostand nach Berücksichtigung der Negativ-Zinsen: " + String.format("%.2f", kontoStand = kontoStand * (1 + (negativZinssatz * 0.01))).replace(",",".")); // * 0.01 damit wenn ich z.b 20% eingebe, es sich in 0.2 umwandelt (-> Zinsrechnen)
+                kontoStand = kontoStand * (1 + (negativZinssatz * 0.01)); // * 0.01 damit wenn ich z.b 20% eingebe, es sich in 0.2 umwandelt (-> Zinsrechnen)
                 // Update kontostand vom jeweiligen Konto nach Negativ-Zinsen in der Girokonto-Tabelle
                 String updateKontostandNachNegativZinsenGirokontoSQL = "UPDATE girokonto SET kontostand = kontostand * (1 + (? * 0.01)) WHERE kontoNr = ?";
                 PreparedStatement updateKontostandNachNegativZinsenGirokontoStatement = con.prepareStatement(updateKontostandNachNegativZinsenGirokontoSQL);
@@ -283,7 +342,7 @@ public class GiroKonto extends Konto {
                 updateKontostandNachNegativZinsenGirokontoStatement.executeUpdate();
                 updateKontostandNachNegativZinsenGirokontoStatement.close();
             } else if (kontoStand > 0) {
-                System.out.println("Kontostand nach Berücksichtigung der Positiv-Zinsen: " + String.format("%.2f", kontoStand = kontoStand * (1 + (positivZinssatz * 0.01))).replace(",","."));
+                kontoStand = kontoStand * (1 + (positivZinssatz * 0.01));
                 // Update kontostand vom jeweiligen Konto nach Negativ-Zinsen in der Girokonto-Tabelle
                 String updateKontostandNachPositivZinsenGirokontoSQL = "UPDATE girokonto SET kontostand = kontostand * (1 + (? * 0.01)) WHERE kontoNr = ?";
                 PreparedStatement updateKontostandNachPositivZinsenGirokontoStatement = con.prepareStatement(updateKontostandNachPositivZinsenGirokontoSQL);
@@ -292,8 +351,21 @@ public class GiroKonto extends Konto {
                 updateKontostandNachPositivZinsenGirokontoStatement.executeUpdate();
                 updateKontostandNachPositivZinsenGirokontoStatement.close();
             }
+
+            // Benachrichtige Observer über die Änderung
+            KontoObserver.notifyListeners();
+            DBManager.closeConnection();
         }else{
-            System.out.println("Die Zinsen können nicht berechnet werden da das Konto inaktiv ist");
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Fehler bei Zins-Berechnung");
+                    alert.setHeaderText("Konto inaktiv");
+                    alert.setContentText("Eine Zins-Berechnung ist nicht möglich, da das Konto inaktiv ist");
+                    alert.showAndWait();
+                }
+            });
         }
     }
 
@@ -304,9 +376,10 @@ public class GiroKonto extends Konto {
      * @param con Die Verbindung zur Datenbank
      * @throws SQLException Wenn ein Datenbankfehler auftritt.
      */
-    public void einzahlen(double betrag, Connection con) throws SQLException{
+    public void einzahlen(double betrag) throws SQLException{
+        Connection con = DBManager.getConnection();
         if (isKontoAktiv()) {
-            System.out.println("Kontostand nach Einzahlung: " + (kontoStand += betrag));
+            kontoStand += betrag;
             summeEinzahlungen += betrag;
 
             // Update kontostand vom jeweiligen Konto nach Einzahlung in der Girokonto-Tabelle
@@ -324,8 +397,21 @@ public class GiroKonto extends Konto {
             updateSummeEinzahlungenNachEinzahlungGirokontoStatement.setString(2, this.kontoNr);
             updateSummeEinzahlungenNachEinzahlungGirokontoStatement.executeUpdate();
             updateSummeEinzahlungenNachEinzahlungGirokontoStatement.close();
+
+            // Benachrichtige Observer über die Änderung
+            KontoObserver.notifyListeners();
+            DBManager.closeConnection();
         }else{
-            System.out.println("Eine Einzahlung ist nicht möglich da das Konto inaktiv ist");
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Fehler bei Einzahlung");
+                    alert.setHeaderText("Konto inaktiv");
+                    alert.setContentText("Eine Einzahlung ist nicht möglich, da das Konto inaktiv ist.");
+                    alert.showAndWait();
+                }
+            });
         }
     }
 
@@ -335,9 +421,19 @@ public class GiroKonto extends Konto {
      * @param con Die Verbindung zur Datenbank
      * @throws SQLException Wenn ein Datenbankfehler auftritt.
      */
-    public void spesenAbziehen(Connection con) throws SQLException{
+    public void spesenAbziehen() throws SQLException {
+        Connection con = DBManager.getConnection();
         if (kontoStand <= 0){
-            System.out.println("Es können keine Spesen mehr abgezogen werden, weil auf Konto kein Geld bzw. das Konto im Minus ist");
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Fehler bei Spesen-Abzug");
+                    alert.setHeaderText("Kontostand zu niedrig");
+                    alert.setContentText("Ein Spesen-Abzug ist nicht möglich, da der Kontostand zu niedrig ist");
+                    alert.showAndWait();
+                }
+            });
         }else {
             System.out.println("Kontostand nach Abzug der Spesen: " + (kontoStand -= this.spesen));
             // Update kontostand vom jeweiligen Konto nach Abzug der Spesen in der Girokonto-Tabelle
@@ -347,6 +443,10 @@ public class GiroKonto extends Konto {
             updateKontostandNachAbzugSpesenGirokontoStatement.setString(2, this.kontoNr);
             updateKontostandNachAbzugSpesenGirokontoStatement.executeUpdate();
             updateKontostandNachAbzugSpesenGirokontoStatement.close();
+
+            // Benachrichtige Observer über die Änderung
+            KontoObserver.notifyListeners();
+            DBManager.closeConnection();
         }
     }
 }

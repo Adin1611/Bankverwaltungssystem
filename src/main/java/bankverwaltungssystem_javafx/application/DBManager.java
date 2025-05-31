@@ -8,8 +8,8 @@ public class DBManager {
 
     private static Connection connection;
 
-    private static final String URL = "jdbc:mysql://localhost:3306/bankverwaltungssystem"; // oder MySQL: jdbc:mysql://localhost:3306/bank
-    private static final String USER = "root"; // bei SQLite leer
+    private static final String URL = "jdbc:mysql://localhost:3306/bankverwaltungssystem";
+    private static final String USER = "root";
     private static final String PASSWORD = "";
 
     private DBManager() {
