@@ -11,7 +11,7 @@
 
 <AnchorPane prefHeight="550.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bankverwaltungssystem_javafx.controllers.SKDashboardController">
    <children>
-      <Label fx:id="lblSKKontostand" layoutX="225.0" layoutY="30.0" prefHeight="80.0" prefWidth="250.0" style="-fx-background-color: C3C3C3; -fx-border-color: black;">
+      <Label fx:id="lblSKKontostand" alignment="CENTER" layoutX="225.0" layoutY="30.0" prefHeight="80.0" prefWidth="250.0" style="-fx-background-color: C3C3C3; -fx-border-color: black;" textAlignment="CENTER" wrapText="true">
          <font>
             <Font size="40.0" />
          </font>
@@ -108,7 +108,7 @@
                   <Insets left="60.0" top="-22.0" />
                </VBox.margin>
             </TextField>
-            <Button fx:id="btnSKEinzahlen" mnemonicParsing="false" prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: A8A8A8;" text="Einzahlen">
+            <Button fx:id="btnSKEinzahlen" mnemonicParsing="false" onAction="#monatlichEinzahlenSK" prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: A8A8A8;" text="Einzahlen">
                <VBox.margin>
                   <Insets left="30.0" top="7.5" />
                </VBox.margin>
@@ -138,7 +138,7 @@
                   <Insets left="60.0" top="-22.0" />
                </VBox.margin>
             </TextField>
-            <Button fx:id="btnSKAuszahlen" mnemonicParsing="false" prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: A8A8A8;" text="Auszahlen">
+            <Button fx:id="btnSKAuszahlen" mnemonicParsing="false" onAction="#auszahlenSK" prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: A8A8A8;" text="Auszahlen">
                <VBox.margin>
                   <Insets left="30.0" top="7.5" />
                </VBox.margin>
@@ -181,14 +181,14 @@
                   <Insets left="20.0" top="68.0" />
                </HBox.margin>
             </TextField>
-            <Button fx:id="btnSKUeberweisen" minWidth="100.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: A8A8A8;" text="Überweisen">
+            <Button fx:id="btnSKUeberweisen" minWidth="100.0" mnemonicParsing="false" onAction="#ueberweisenSK" prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: A8A8A8;" text="Überweisen">
                <HBox.margin>
                   <Insets left="-200.0" top="100.0" />
                </HBox.margin>
             </Button>
          </children>
       </HBox>
-      <Button fx:id="btnSKZinsenBerechnen" layoutX="427.5" layoutY="430.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="175.0" style="-fx-background-color: A8A8A8;" text="Zinsen berechnen" />
-      <Button fx:id="btnSKKontoauszugDrucken" layoutX="427.5" layoutY="470.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="175.0" style="-fx-background-color: A8A8A8;" text="Kontoauszug drucken" />
+      <Button fx:id="btnSKZinsenBerechnen" layoutX="427.5" layoutY="430.0" mnemonicParsing="false" onAction="#berechneZinsenSK" prefHeight="20.0" prefWidth="175.0" style="-fx-background-color: A8A8A8;" text="Zinsen berechnen" />
+      <Button fx:id="btnSKKontoauszugDrucken" layoutX="427.5" layoutY="470.0" mnemonicParsing="false" onAction="#kontoauszugDrucken" prefHeight="20.0" prefWidth="175.0" style="-fx-background-color: A8A8A8;" text="Kontoauszug drucken" />
    </children>
 </AnchorPane>

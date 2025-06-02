@@ -1,16 +1,16 @@
 package bankverwaltungssystem_javafx.controllers;
 
 import bankverwaltungssystem_javafx.application.DBManager;
+import bankverwaltungssystem_javafx.application.FensterManager;
 import bankverwaltungssystem_javafx.application.KontoObserver;
 import bankverwaltungssystem_javafx.models.GiroKonto;
 import bankverwaltungssystem_javafx.models.Konto;
 import bankverwaltungssystem_javafx.models.KundenService;
-import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.stage.Stage;
-
+import javafx.event.ActionEvent;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -105,5 +105,12 @@ public class GKDashboardController implements Initializable {
     @FXML
     private void spesenAbziehenGK() throws SQLException {
         giroKonto.spesenAbziehen();
+    }
+
+    @FXML
+    private void kontoauszugDrucken(ActionEvent event) throws SQLException, IOException {
+        GKKontoauszugController controller = FensterManager.oeffneFensterUndHoleController(
+                "/bankverwaltungssystem_javafx/gkKontoauszug.fxml", "Kontoauszug", event);
+        controller.setGiroKontoUndKunde(giroKonto);
     }
 }

@@ -109,6 +109,9 @@ public class Kunde {
         return ort;
     }
 
+    public String getEmail(){
+        return email;
+    }
     /**
      * Liefert die Identifikationsnummer des Kunden.
      *
@@ -116,6 +119,10 @@ public class Kunde {
      */
     public String getIdentifikationsNr(){
         return identifikationsNr;
+    }
+
+    public boolean getKreWuerdigkeit(){
+        return kreWuerdigkeit;
     }
 
     /**

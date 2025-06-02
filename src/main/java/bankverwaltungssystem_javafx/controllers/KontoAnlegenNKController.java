@@ -5,6 +5,7 @@ import bankverwaltungssystem_javafx.models.Kunde;
 import bankverwaltungssystem_javafx.application.DBManager;
 import bankverwaltungssystem_javafx.application.FensterManager;
 import bankverwaltungssystem_javafx.models.KundenService;
+import bankverwaltungssystem_javafx.models.SparKonto;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.event.ActionEvent;
@@ -75,7 +76,9 @@ public class KontoAnlegenNKController {
 
         Connection con = DBManager.getConnection();
         kunde = KundenService.getKundeById(con);
-        kunde.eroeffneSparKonto(kontoNr, kontostand, kontoAktiv, zinssatz);
-        FensterManager.oeffneFenster("/bankverwaltungssystem_javafx/skDashboard.fxml", "Sparkonto-Dashboard", event);
+        SparKonto sparKonto = kunde.eroeffneSparKonto(kontoNr, kontostand, kontoAktiv, zinssatz);
+        SKDashboardController controller = FensterManager.oeffneFensterUndHoleController(
+                "/bankverwaltungssystem_javafx/skDashboard.fxml", "Sparkonto-Dashboard", event);
+        controller.setSparKonto(sparKonto);
     }
 }

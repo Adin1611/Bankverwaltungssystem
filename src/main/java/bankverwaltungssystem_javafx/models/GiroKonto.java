@@ -58,41 +58,10 @@ public class GiroKonto extends Konto {
         summeAuszahlungen = 0.0;
     }
 
-    /* Dieser Konstruktor dient nur als Test für die BankTest-Klasse
-    public GiroKonto(long kontoNr, double kontoStand, double spesen, double ueberziehungsLimit, double negativZinssatz, double positivZinssatz) {
-        super(kontoNr,kontoStand);
-        this.spesen = spesen;
-        this.ueberziehungsLimit = ueberziehungsLimit;
-        this.negativZinssatz = negativZinssatz;
-        this.positivZinssatz = positivZinssatz;
-        this.summeEinzahlungen = 0.0;
-        this.summeAuszahlungen = 0.0;
-    }
-     */
-
-    /*
-    public String getKontoNr(Connection con) throws SQLException {
-        String kontoNrHolen = "SELECT kontoNr FROM girokonto INNER JOIN kunde ON girokonto.kid = kunde.kid WHERE kontoNr = ?";
-        PreparedStatement psKontoNrHolen = con.prepareStatement(kontoNrHolen);
-        psKontoNrHolen.setString(1, th);
-        ResultSet rsKontoNrHolen = psKontoNrHolen.executeQuery();
-
-        String kontoNr = "";
-        if (rsKontoNrHolen.next()) {
-            kontoNr = rsKontoNrHolen.getString("kontoNr");
-        }
-
-        psKontoNrHolen.close();
-        rsKontoNrHolen.close();
-        return kontoNr;
-    }
-     */
-
     @Override
     public String getKontoNr(){
         return this.kontoNr;
     }
-
 
     /**
      * {@inheritDoc}
@@ -189,7 +158,7 @@ public class GiroKonto extends Konto {
     public void auszahlen(double betrag) throws SQLException {
         Connection con = DBManager.getConnection();
         if (isKontoAktiv()) {
-            if (betrag > (kontoStand + this.ueberziehungsLimit)) {
+            if (betrag >= (kontoStand + this.ueberziehungsLimit)) {
                 // Platform.runLater() wird benötigt, weil:
                 // 1. JavaFX erfordert, dass alle UI-Operationen auf dem JavaFX Application Thread ausgeführt werden
                 // 2. Die auszahlen()-Methode wird möglicherweise von einem anderen Thread aufgerufen
@@ -200,7 +169,7 @@ public class GiroKonto extends Konto {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Fehler bei Auszahlung");
                         alert.setHeaderText("Überziehungslimit überschritten");
-                        alert.setContentText("Die Auszahlung kann nicht durchgeführt werden, da das Überziehungslimit überschritten würde.");
+                        alert.setContentText("Die Auszahlung kann nicht durchgeführt werden, da das Überziehungslimit überschritten wurde.");
                         alert.showAndWait();
                     }
                 });
@@ -246,82 +215,98 @@ public class GiroKonto extends Konto {
      * {@inheritDoc}
      */
     @Override
-    public void ueberweisen(double betrag, Konto konto, String kontoNrVersender, String kontoNrEmpfaenger) throws SQLException{
+    public void ueberweisen(double betrag, Konto konto, String kontoNrVersender, String kontoNrEmpfaenger) throws SQLException {
         Connection con = DBManager.getConnection();
-        if (konto.isKontoAktiv() && ((kontoStand + ueberziehungsLimit) >= betrag)) { // *-1 damit ich den positiven ÜberziehungsLimit auf einen negativen Überziehungs-limit verwandele -> Grund: Vergleich
+        try {
+            if (konto.isKontoAktiv() && ((kontoStand + ueberziehungsLimit) >= betrag)) { // *-1 damit ich den positiven ÜberziehungsLimit auf einen negativen Überziehungs-limit verwandele -> Grund: Vergleich
+                if (konto instanceof GiroKonto) {
+                    konto.kontoStand += betrag;
+                    konto.summeEinzahlungen += betrag;
 
-            if (konto instanceof GiroKonto) {
-                konto.kontoStand += betrag;
-                konto.summeEinzahlungen += betrag;
+                    // Update kontostand vom Empfängerkonto in der Girokonto-Tabelle
+                    String updateKontostandEmpfaengerkontoGirokontoSQL = "UPDATE girokonto SET kontostand = kontostand + ? WHERE kontoNr = ?";
+                    PreparedStatement updateKontostandEmpfaengerkontoGirokontoStatement = con.prepareStatement(updateKontostandEmpfaengerkontoGirokontoSQL);
+                    updateKontostandEmpfaengerkontoGirokontoStatement.setDouble(1, betrag);
+                    updateKontostandEmpfaengerkontoGirokontoStatement.setString(2, kontoNrEmpfaenger);
+                    updateKontostandEmpfaengerkontoGirokontoStatement.executeUpdate();
+                    updateKontostandEmpfaengerkontoGirokontoStatement.close();
 
-                // Update kontostand vom Empfängerkonto in der Girokonto-Tabelle
-                String updateKontostandEmpfaengerkontoGirokontoSQL = "UPDATE girokonto SET kontostand = kontostand + ? WHERE kontoNr = ?";
-                PreparedStatement updateKontostandEmpfaengerkontoGirokontoStatement = con.prepareStatement(updateKontostandEmpfaengerkontoGirokontoSQL);
-                updateKontostandEmpfaengerkontoGirokontoStatement.setDouble(1, betrag);
-                updateKontostandEmpfaengerkontoGirokontoStatement.setString(2, kontoNrEmpfaenger);
-                updateKontostandEmpfaengerkontoGirokontoStatement.executeUpdate();
-                updateKontostandEmpfaengerkontoGirokontoStatement.close();
+                    // Update summeEinzahlungen vom Empfängerkonto in der Girokonto-Tabelle
+                    String updateSummeEinzahlungenEmpfaengerkontoGirokontoSQL = "UPDATE girokonto SET summeEinzahlungen = summeEinzahlungen + ? WHERE kontoNr = ?";
+                    PreparedStatement updateSummeEinzahlungenEmpfaengerkontoGirokontoStatement = con.prepareStatement(updateSummeEinzahlungenEmpfaengerkontoGirokontoSQL);
+                    updateSummeEinzahlungenEmpfaengerkontoGirokontoStatement.setDouble(1, betrag);
+                    updateSummeEinzahlungenEmpfaengerkontoGirokontoStatement.setString(2, kontoNrEmpfaenger);
+                    updateSummeEinzahlungenEmpfaengerkontoGirokontoStatement.executeUpdate();
+                    updateSummeEinzahlungenEmpfaengerkontoGirokontoStatement.close();
+                }
+                else if (konto instanceof SparKonto){
+                    konto.kontoStand += betrag;
+                    konto.summeEinzahlungen += betrag;
 
-                // Update summeEinzahlungen vom Empfängerkonto in der Girokonto-Tabelle
-                String updateSummeEinzahlungenEmpfaengerkontoGirokontoSQL = "UPDATE girokonto SET summeEinzahlungen = summeEinzahlungen + ? WHERE kontoNr = ?";
-                PreparedStatement updateSummeEinzahlungenEmpfaengerkontoGirokontoStatement = con.prepareStatement(updateSummeEinzahlungenEmpfaengerkontoGirokontoSQL);
-                updateSummeEinzahlungenEmpfaengerkontoGirokontoStatement.setDouble(1, betrag);
-                updateSummeEinzahlungenEmpfaengerkontoGirokontoStatement.setString(2, kontoNrEmpfaenger);
-                updateSummeEinzahlungenEmpfaengerkontoGirokontoStatement.executeUpdate();
-                updateSummeEinzahlungenEmpfaengerkontoGirokontoStatement.close();
+                    // Update kontostand vom Empfängerkonto in der Sparkonto-Tabelle
+                    String updateKontostandEmpfaengerkontoSparkontoSQL = "UPDATE sparkonto SET kontostand = kontostand + ? WHERE kontoNr = ?";
+                    PreparedStatement updateKontostandEmpfaengerkontoSparkontoStatement = con.prepareStatement(updateKontostandEmpfaengerkontoSparkontoSQL);
+                    updateKontostandEmpfaengerkontoSparkontoStatement.setDouble(1, betrag);
+                    updateKontostandEmpfaengerkontoSparkontoStatement.setString(2, kontoNrEmpfaenger);
+                    updateKontostandEmpfaengerkontoSparkontoStatement.executeUpdate();
+                    updateKontostandEmpfaengerkontoSparkontoStatement.close();
+
+                    // Update summeEinzahlungen vom Empfängerkonto in der Sparkonto-Tabelle
+                    String updateSummeEinzahlungenEmpfaengerkontoSparkontoSQL = "UPDATE sparkonto SET summeEinzahlungen = summeEinzahlungen + ? WHERE kontoNr = ?";
+                    PreparedStatement updateSummeEinzahlungenEmpfaengerkontoSparkontoStatement = con.prepareStatement(updateSummeEinzahlungenEmpfaengerkontoSparkontoSQL);
+                    updateSummeEinzahlungenEmpfaengerkontoSparkontoStatement.setDouble(1, betrag);
+                    updateSummeEinzahlungenEmpfaengerkontoSparkontoStatement.setString(2, kontoNrEmpfaenger);
+                    updateSummeEinzahlungenEmpfaengerkontoSparkontoStatement.executeUpdate();
+                    updateSummeEinzahlungenEmpfaengerkontoSparkontoStatement.close();
+                }
+
+                kontoStand -= betrag;
+                summeAuszahlungen += betrag;
+
+                // Update kontostand vom Versenderkonto in der Girokonto-Tabelle
+                String updateKontostandVersenderkontoGirokontoSQL = "UPDATE girokonto SET kontostand = kontostand - ? WHERE kontoNr = ?";
+                PreparedStatement updateKontostandVersenderkontoGirokontoStatement = con.prepareStatement(updateKontostandVersenderkontoGirokontoSQL);
+                updateKontostandVersenderkontoGirokontoStatement.setDouble(1, betrag);
+                updateKontostandVersenderkontoGirokontoStatement.setString(2, kontoNrVersender);
+                updateKontostandVersenderkontoGirokontoStatement.executeUpdate();
+
+                updateKontostandVersenderkontoGirokontoStatement.close();
+                // Update summeAuszahlungen vom Versenderkonto in der Girokonto-Tabelle
+                String updateSummeAuszahlungenVersenderkontoGirokontoSQL = "UPDATE girokonto SET summeAuszahlungen = summeAuszahlungen + ? WHERE kontoNr = ?";
+                PreparedStatement updateSummeAuszahlungenVersenderkontoGirokontoStatement = con.prepareStatement(updateSummeAuszahlungenVersenderkontoGirokontoSQL);
+                updateSummeAuszahlungenVersenderkontoGirokontoStatement.setDouble(1, betrag);
+                updateSummeAuszahlungenVersenderkontoGirokontoStatement.setString(2, kontoNrVersender);
+                updateSummeAuszahlungenVersenderkontoGirokontoStatement.executeUpdate();
+                updateSummeAuszahlungenVersenderkontoGirokontoStatement.close();
+
+                // Benachrichtige Observer über die Änderung
+                KontoObserver.notifyListeners();
+            } else {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Fehler bei Überweisung");
+                        alert.setHeaderText("Konto inaktiv oder Kontostand zu niedrig");
+                        alert.setContentText("Eine Überweisung ist nicht möglich, da das Zielkonto inaktiv ist oder der Kontostand zu niedrig");
+                        alert.showAndWait();
+                    }
+                });
             }
-            else if (konto instanceof SparKonto){
-                konto.kontoStand += betrag;
-                konto.summeEinzahlungen += betrag;
-
-                // Update kontostand vom Empfängerkonto in der Sparkonto-Tabelle
-                String updateKontostandEmpfaengerkontoSparkontoSQL = "UPDATE sparkonto SET kontostand = kontostand + ? WHERE kontoNr = ?";
-                PreparedStatement updateKontostandEmpfaengerkontoSparkontoStatement = con.prepareStatement(updateKontostandEmpfaengerkontoSparkontoSQL);
-                updateKontostandEmpfaengerkontoSparkontoStatement.setDouble(1, betrag);
-                updateKontostandEmpfaengerkontoSparkontoStatement.setString(2, kontoNrEmpfaenger);
-                updateKontostandEmpfaengerkontoSparkontoStatement.executeUpdate();
-                updateKontostandEmpfaengerkontoSparkontoStatement.close();
-
-                // Update summeEinzahlungen vom Empfängerkonto in der Sparkonto-Tabelle
-                String updateSummeEinzahlungenEmpfaengerkontoSparkontoSQL = "UPDATE sparkonto SET summeEinzahlungen = summeEinzahlungen + ? WHERE kontoNr = ?";
-                PreparedStatement updateSummeEinzahlungenEmpfaengerkontoSparkontoStatement = con.prepareStatement(updateSummeEinzahlungenEmpfaengerkontoSparkontoSQL);
-                updateSummeEinzahlungenEmpfaengerkontoSparkontoStatement.setDouble(1, betrag);
-                updateSummeEinzahlungenEmpfaengerkontoSparkontoStatement.setString(2, kontoNrEmpfaenger);
-                updateSummeEinzahlungenEmpfaengerkontoSparkontoStatement.executeUpdate();
-                updateSummeEinzahlungenEmpfaengerkontoSparkontoStatement.close();
-            }
-
-            kontoStand -= betrag;
-            summeAuszahlungen += betrag;
-            // Update kontostand vom Versenderkonto in der Girokonto-Tabelle
-            String updateKontostandVersenderkontoGirokontoSQL = "UPDATE girokonto SET kontostand = kontostand - ? WHERE kontoNr = ?";
-            PreparedStatement updateKontostandVersenderkontoGirokontoStatement = con.prepareStatement(updateKontostandVersenderkontoGirokontoSQL);
-            updateKontostandVersenderkontoGirokontoStatement.setDouble(1, betrag);
-            updateKontostandVersenderkontoGirokontoStatement.setString(2, kontoNrVersender);
-            updateKontostandVersenderkontoGirokontoStatement.executeUpdate();
-            updateKontostandVersenderkontoGirokontoStatement.close();
-            // Update summeAuszahlungen vom Versenderkonto in der Girokonto-Tabelle
-            String updateSummeAuszahlungenVersenderkontoGirokontoSQL = "UPDATE girokonto SET summeAuszahlungen = summeAuszahlungen + ? WHERE kontoNr = ?";
-            PreparedStatement updateSummeAuszahlungenVersenderkontoGirokontoStatement = con.prepareStatement(updateSummeAuszahlungenVersenderkontoGirokontoSQL);
-            updateSummeAuszahlungenVersenderkontoGirokontoStatement.setDouble(1, betrag);
-            updateSummeAuszahlungenVersenderkontoGirokontoStatement.setString(2, kontoNrVersender);
-            updateSummeAuszahlungenVersenderkontoGirokontoStatement.executeUpdate();
-            updateSummeAuszahlungenVersenderkontoGirokontoStatement.close();
-
-            // Benachrichtige Observer über die Änderung
-            KontoObserver.notifyListeners();
-            DBManager.closeConnection();
-        }else{
+        } catch (NullPointerException e) { // NullPointerExceotion für falsche KontoNr-Eingabe bzw. Konto nicht vorhanden
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Fehler bei Überweisung");
-                    alert.setHeaderText("Konto inaktiv oder Kontostand zu niedrig");
-                    alert.setContentText("Eine Überweisung ist nicht möglich, da das Zielkonto inaktiv ist oder der Kontostand zu niedrig");
+                    alert.setHeaderText("Ungültige Kontonummer");
+                    alert.setContentText("Die angegebene Empfängerkontonummer existiert nicht. Bitte überprüfen Sie die Eingabe.");
                     alert.showAndWait();
                 }
+
             });
+        } finally {
+            DBManager.closeConnection();
         }
     }
 
@@ -334,6 +319,7 @@ public class GiroKonto extends Konto {
         if (isKontoAktiv()) {
             if (kontoStand < 0) {
                 kontoStand = kontoStand * (1 + (negativZinssatz * 0.01)); // * 0.01 damit wenn ich z.b 20% eingebe, es sich in 0.2 umwandelt (-> Zinsrechnen)
+
                 // Update kontostand vom jeweiligen Konto nach Negativ-Zinsen in der Girokonto-Tabelle
                 String updateKontostandNachNegativZinsenGirokontoSQL = "UPDATE girokonto SET kontostand = kontostand * (1 + (? * 0.01)) WHERE kontoNr = ?";
                 PreparedStatement updateKontostandNachNegativZinsenGirokontoStatement = con.prepareStatement(updateKontostandNachNegativZinsenGirokontoSQL);
@@ -343,6 +329,7 @@ public class GiroKonto extends Konto {
                 updateKontostandNachNegativZinsenGirokontoStatement.close();
             } else if (kontoStand > 0) {
                 kontoStand = kontoStand * (1 + (positivZinssatz * 0.01));
+
                 // Update kontostand vom jeweiligen Konto nach Negativ-Zinsen in der Girokonto-Tabelle
                 String updateKontostandNachPositivZinsenGirokontoSQL = "UPDATE girokonto SET kontostand = kontostand * (1 + (? * 0.01)) WHERE kontoNr = ?";
                 PreparedStatement updateKontostandNachPositivZinsenGirokontoStatement = con.prepareStatement(updateKontostandNachPositivZinsenGirokontoSQL);
@@ -373,7 +360,6 @@ public class GiroKonto extends Konto {
      * Fuehrt eine Einzahlung auf das Girokonto durch.
      *
      * @param betrag Der einzuzahlende Betrag.
-     * @param con Die Verbindung zur Datenbank
      * @throws SQLException Wenn ein Datenbankfehler auftritt.
      */
     public void einzahlen(double betrag) throws SQLException{

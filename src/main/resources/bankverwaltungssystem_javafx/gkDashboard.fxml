@@ -229,6 +229,6 @@
       </HBox>
       <Button fx:id="btnGKZinsenBerechnen" layoutX="427.5" layoutY="430.0" mnemonicParsing="false" onAction="#berechneZinsenGK" prefHeight="20.0" prefWidth="175.0" style="-fx-background-color: A8A8A8;" text="Zinsen berechnen" />
       <Button fx:id="btnGKSpesenAbziehen" layoutX="427.5" layoutY="470.0" mnemonicParsing="false" onAction="#spesenAbziehenGK" prefHeight="20.0" prefWidth="175.0" style="-fx-background-color: A8A8A8;" text="Spesen abziehen" />
-      <Button fx:id="btnGKKontoauszugDrucken" layoutX="427.5" layoutY="510.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="175.0" style="-fx-background-color: A8A8A8;" text="Kontoauszug drucken" />
+      <Button fx:id="btnGKKontoauszugDrucken" layoutX="427.5" layoutY="510.0" mnemonicParsing="false" onAction="#kontoauszugDrucken" prefHeight="20.0" prefWidth="175.0" style="-fx-background-color: A8A8A8;" text="Kontoauszug drucken" />
    </children>
 </AnchorPane>

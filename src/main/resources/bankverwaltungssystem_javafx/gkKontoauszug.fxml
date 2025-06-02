@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="380.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bankverwaltungssystem.bankverwaltungssystem_javafx.Kontoauszug">
+<AnchorPane prefHeight="380.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bankverwaltungssystem_javafx.controllers.GKKontoauszugController">
    <children>
       <Label fx:id="lblKontoauszug" layoutX="205.0" layoutY="20.0" prefHeight="50.0" prefWidth="190.0" text="Kontoauszug">
          <font>
