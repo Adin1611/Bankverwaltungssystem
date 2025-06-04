@@ -12,11 +12,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -39,8 +37,6 @@ public class KontoAnlegenVKController {
     @FXML
     private TextField txtGKPositivZinssatz;
     @FXML
-    private Button btnGKAusfuehren;
-    @FXML
     private TextField txtSKKontoNr;
     @FXML
     private TextField txtSKKontostand;
@@ -48,8 +44,6 @@ public class KontoAnlegenVKController {
     private RadioButton btnSKKontoAktivJa;
     @FXML
     private TextField txtSKZinssatz;
-    @FXML
-    private Button btnSKAusfuehren;
 
     private Kunde kunde;
 
@@ -69,8 +63,11 @@ public class KontoAnlegenVKController {
 
         Connection con = DBManager.getConnection();
         kunde = KundenService.getKundeById(con);
-        kunde.eroeffneGiroKonto(kontoNr, kontostand, kontoAktiv, spesen, ueberziehunslimit, negativZinssatz, positivZinssatz);
-        FensterManager.oeffneFenster("/bankverwaltungssystem_javafx/gkDashboard.fxml", "Girokonto-Dashboard", event);
+        GiroKonto giroKonto = kunde.eroeffneGiroKonto(kontoNr, kontostand, kontoAktiv, spesen, ueberziehunslimit, negativZinssatz, positivZinssatz);
+        GKDashboardController controller = FensterManager.oeffneFensterUndHoleController(
+                "/bankverwaltungssystem_javafx/gkDashboard.fxml", "Girokonto-Dashboard", event);
+        controller.setGiroKonto(giroKonto);
+        DBManager.closeConnection();
     }
 
     @FXML
@@ -82,8 +79,11 @@ public class KontoAnlegenVKController {
 
         Connection con = DBManager.getConnection();
         kunde = KundenService.getKundeById(con);
-        kunde.eroeffneSparKonto(kontoNr, kontostand, kontoAktiv, zinssatz);
-        FensterManager.oeffneFenster("/bankverwaltungssystem_javafx/skDashboard.fxml", "Sparkonto-Dashboard", event);
+        SparKonto sparKonto = kunde.eroeffneSparKonto(kontoNr, kontostand, kontoAktiv, zinssatz);
+        SKDashboardController controller = FensterManager.oeffneFensterUndHoleController(
+                "/bankverwaltungssystem_javafx/skDashboard.fxml", "Sparkonto-Dashboard", event);
+        controller.setSparKonto(sparKonto);
+        DBManager.closeConnection();
     }
 
     @FXML
@@ -105,9 +105,11 @@ public class KontoAnlegenVKController {
         stage.setScene(new Scene(root));
         stage.show();
 
-        // Braucht man sonst schließen sich die Fenster nicht richtig
+        // Braucht man sonst schließt sich die Fenster nicht richtig
         Stage aktuellesFenster = (Stage) ((Node) event.getSource()).getScene().getWindow();
         aktuellesFenster.close();
+
+        DBManager.closeConnection();
     }
 
     @FXML
@@ -129,8 +131,10 @@ public class KontoAnlegenVKController {
         stage.setScene(new Scene(root));
         stage.show();
 
-        // Braucht man sonst schließen sich die Fenster nicht richtig
+        // Braucht man sonst schließt sich die Fenster nicht richtig
         Stage aktuellesFenster = (Stage) ((Node) event.getSource()).getScene().getWindow();
         aktuellesFenster.close();
+
+        DBManager.closeConnection();
     }
 }

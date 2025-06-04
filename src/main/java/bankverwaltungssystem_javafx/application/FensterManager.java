@@ -5,9 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class FensterManager {
@@ -26,31 +24,6 @@ public class FensterManager {
 
         Stage aktuellesFenster = (Stage) ((Node) ereignis.getSource()).getScene().getWindow();
         aktuellesFenster.close();
-    }
-
-    /**
-     * Öffnet ein modales (blockierendes) Fenster.
-     */
-    public static void oeffneModalesFenster(String fxmlPfad, String titel) throws IOException {
-        FXMLLoader ladehilfe = new FXMLLoader(FensterManager.class.getResource(fxmlPfad));
-        Parent wurzel = ladehilfe.load();
-
-        Stage modalesFenster = new Stage();
-        modalesFenster.initModality(Modality.APPLICATION_MODAL);
-        modalesFenster.setTitle(titel);
-        modalesFenster.setScene(new Scene(wurzel));
-        modalesFenster.showAndWait();
-    }
-
-    /**
-     * Wechselt nur die Szene innerhalb des aktuellen Fensters.
-     */
-    public static void wechsleSzene(String fxmlPfad, ActionEvent ereignis) throws IOException {
-        Parent wurzel = FXMLLoader.load(FensterManager.class.getResource(fxmlPfad));
-        Scene neueSzene = new Scene(wurzel);
-
-        Stage fenster = (Stage) ((Node) ereignis.getSource()).getScene().getWindow();
-        fenster.setScene(neueSzene);
     }
 
     /**

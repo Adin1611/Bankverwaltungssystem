@@ -9,8 +9,6 @@ import bankverwaltungssystem_javafx.models.SparKonto;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.event.ActionEvent;
-import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -31,8 +29,6 @@ public class KontoAnlegenNKController {
     @FXML
     private TextField txtGKPositivZinssatz;
     @FXML
-    private Button btnGKAusfuehren;
-    @FXML
     private TextField txtSKKontoNr;
     @FXML
     private TextField txtSKKontostand;
@@ -40,8 +36,6 @@ public class KontoAnlegenNKController {
     private RadioButton btnSKKontoAktivJa;
     @FXML
     private TextField txtSKZinssatz;
-    @FXML
-    private Button btnSKAusfuehren;
 
     private Kunde kunde;
 
@@ -65,6 +59,7 @@ public class KontoAnlegenNKController {
         GKDashboardController controller = FensterManager.oeffneFensterUndHoleController(
                 "/bankverwaltungssystem_javafx/gkDashboard.fxml", "Girokonto-Dashboard", event);
         controller.setGiroKonto(giroKonto);
+        DBManager.closeConnection();
     }
 
     @FXML
@@ -80,5 +75,6 @@ public class KontoAnlegenNKController {
         SKDashboardController controller = FensterManager.oeffneFensterUndHoleController(
                 "/bankverwaltungssystem_javafx/skDashboard.fxml", "Sparkonto-Dashboard", event);
         controller.setSparKonto(sparKonto);
+        DBManager.closeConnection();
     }
 }

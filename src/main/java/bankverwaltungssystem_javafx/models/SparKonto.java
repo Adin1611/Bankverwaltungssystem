@@ -4,9 +4,7 @@ import bankverwaltungssystem_javafx.application.DBManager;
 import bankverwaltungssystem_javafx.application.KontoObserver;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
-
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -84,13 +82,13 @@ public class SparKonto extends Konto{
     @Override
     public void setSummeEinzahlungen(double summeEinzahlungen){
         this.summeEinzahlungen = summeEinzahlungen;
-        KontoObserver.notifyListeners();
+        KontoObserver.benachrichtigeListeners();
     }
 
     @Override
     public void setSummeAuszahlungen(double summeAuszahlungen){
         this.summeAuszahlungen = summeAuszahlungen;
-        KontoObserver.notifyListeners();
+        KontoObserver.benachrichtigeListeners();
     }
 
     /**
@@ -132,7 +130,7 @@ public class SparKonto extends Konto{
                 updateSummeAuszahlungenSparkontoStatement.close();
 
                 // Benachrichtige Observer über die Änderung
-                KontoObserver.notifyListeners();
+                KontoObserver.benachrichtigeListeners();
                 DBManager.closeConnection();
             }
         }else{
@@ -218,7 +216,7 @@ public class SparKonto extends Konto{
                 updateSummeAuszahlungenVersenderkontoSparkontoStatement.close();
 
                 // Benachrichtige Observer über die Änderung
-                KontoObserver.notifyListeners();
+                KontoObserver.benachrichtigeListeners();
             } else {
                 Platform.runLater(new Runnable() {
                     @Override
@@ -266,7 +264,7 @@ public class SparKonto extends Konto{
             updateKontostandNachPositivZinsenSparkontoStatement.close();
 
             // Benachrichtige Observer über die Änderung
-            KontoObserver.notifyListeners();
+            KontoObserver.benachrichtigeListeners();
             DBManager.closeConnection();
         }else{
             Platform.runLater(new Runnable() {
@@ -286,7 +284,6 @@ public class SparKonto extends Konto{
      * Fuehrt eine Monatliche-Einzahlung auf das Girokonto durch.
      *
      * @param betrag Der einzuzahlende Betrag.
-     * @param con Die Verbindung zur Datenbank
      * @throws SQLException Wenn ein Datenbankfehler auftritt.
      */
     public void monatlicheEinzahlung(double betrag) throws SQLException{
@@ -312,7 +309,7 @@ public class SparKonto extends Konto{
             updateSummeEinzahlungenNachEinzahlungSparkontoStatement.close();
 
             // Benachrichtige Observer über die Änderung
-            KontoObserver.notifyListeners();
+            KontoObserver.benachrichtigeListeners();
             DBManager.closeConnection();
         }else{
             Platform.runLater(new Runnable() {

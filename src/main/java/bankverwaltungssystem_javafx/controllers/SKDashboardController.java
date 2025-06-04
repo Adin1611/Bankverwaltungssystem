@@ -3,7 +3,6 @@ package bankverwaltungssystem_javafx.controllers;
 import bankverwaltungssystem_javafx.application.DBManager;
 import bankverwaltungssystem_javafx.application.FensterManager;
 import bankverwaltungssystem_javafx.application.KontoObserver;
-import bankverwaltungssystem_javafx.models.GiroKonto;
 import bankverwaltungssystem_javafx.models.Konto;
 import bankverwaltungssystem_javafx.models.KundenService;
 import bankverwaltungssystem_javafx.models.SparKonto;

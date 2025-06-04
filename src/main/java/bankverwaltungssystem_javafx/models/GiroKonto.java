@@ -4,8 +4,6 @@ import bankverwaltungssystem_javafx.application.DBManager;
 import bankverwaltungssystem_javafx.application.KontoObserver;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
-import javafx.beans.property.SimpleDoubleProperty;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -98,22 +96,14 @@ public class GiroKonto extends Konto {
     @Override
     public void setSummeEinzahlungen(double summeEinzahlungen){
         this.summeEinzahlungen = summeEinzahlungen;
-        KontoObserver.notifyListeners();
+        KontoObserver.benachrichtigeListeners();
     }
 
     @Override
     public void setSummeAuszahlungen(double summeAuszahlungen){
         this.summeAuszahlungen = summeAuszahlungen;
-        KontoObserver.notifyListeners();
+        KontoObserver.benachrichtigeListeners();
     }
-
-    /*
-    @Override
-    public void setKontoStand(double kontoStand) {
-        this.kontoStand = kontoStand;
-        KontoObserver.notifyListeners();
-    }
-     */
 
     /**
      * Gibt das Ueberziehungslimit des Girokontos zurueck.
@@ -194,7 +184,7 @@ public class GiroKonto extends Konto {
                 updateSummeAuszahlungenGirokontoStatement.close();
 
                 // Benachrichtige Observer über die Änderung
-                KontoObserver.notifyListeners();
+                KontoObserver.benachrichtigeListeners();
                 DBManager.closeConnection();
             }
         } else {
@@ -280,7 +270,7 @@ public class GiroKonto extends Konto {
                 updateSummeAuszahlungenVersenderkontoGirokontoStatement.close();
 
                 // Benachrichtige Observer über die Änderung
-                KontoObserver.notifyListeners();
+                KontoObserver.benachrichtigeListeners();
             } else {
                 Platform.runLater(new Runnable() {
                     @Override
@@ -340,7 +330,7 @@ public class GiroKonto extends Konto {
             }
 
             // Benachrichtige Observer über die Änderung
-            KontoObserver.notifyListeners();
+            KontoObserver.benachrichtigeListeners();
             DBManager.closeConnection();
         }else{
             Platform.runLater(new Runnable() {
@@ -385,7 +375,7 @@ public class GiroKonto extends Konto {
             updateSummeEinzahlungenNachEinzahlungGirokontoStatement.close();
 
             // Benachrichtige Observer über die Änderung
-            KontoObserver.notifyListeners();
+            KontoObserver.benachrichtigeListeners();
             DBManager.closeConnection();
         }else{
             Platform.runLater(new Runnable() {
@@ -421,7 +411,7 @@ public class GiroKonto extends Konto {
                 }
             });
         }else {
-            System.out.println("Kontostand nach Abzug der Spesen: " + (kontoStand -= this.spesen));
+            kontoStand -= this.spesen;
             // Update kontostand vom jeweiligen Konto nach Abzug der Spesen in der Girokonto-Tabelle
             String updateKontostandNachAbzugSpesenGirokontoSQL = "UPDATE girokonto SET kontostand = kontostand - ? WHERE kontoNr = ?";
             PreparedStatement updateKontostandNachAbzugSpesenGirokontoStatement = con.prepareStatement(updateKontostandNachAbzugSpesenGirokontoSQL);
@@ -431,7 +421,7 @@ public class GiroKonto extends Konto {
             updateKontostandNachAbzugSpesenGirokontoStatement.close();
 
             // Benachrichtige Observer über die Änderung
-            KontoObserver.notifyListeners();
+            KontoObserver.benachrichtigeListeners();
             DBManager.closeConnection();
         }
     }

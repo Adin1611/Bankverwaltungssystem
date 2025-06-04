@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ListCell;
 import javafx.util.Callback;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,20 +30,21 @@ public class KundenService {
         checkStmt.setString(1, id);
         ResultSet rs = checkStmt.executeQuery();
 
-        if (rs.next()) {
+        if (rs.next()) { // Kunde bereits vorhanden
             String abgerufenerName = rs.getString("name");
             String abgerufenerOrt = rs.getString("ort");
             String abgerufeneEmail = rs.getString("email");
             String abgerufeneId = rs.getString("identifikationsNr");
             boolean abgerufeneKreditw = rs.getBoolean("kreWuerdigkeit");
 
+            DBManager.closeConnection();
             rs.close();
             checkStmt.close();
 
             Kunde kunde = new Kunde(abgerufenerName, abgerufenerOrt, abgerufeneEmail, abgerufeneId, abgerufeneKreditw);
             KundenService.kunde = kunde;
             return kunde;
-        } else {
+        } else { // Neuen Kunden erstellen
             String insertSQL = "INSERT INTO kunde (name, ort, email, identifikationsNr, kreWuerdigkeit) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement insertStmt = con.prepareStatement(insertSQL);
             insertStmt.setString(1, name);
@@ -55,6 +55,7 @@ public class KundenService {
             insertStmt.executeUpdate();
             insertStmt.close();
 
+            DBManager.closeConnection();
             rs.close();
             checkStmt.close();
 
@@ -85,6 +86,7 @@ public class KundenService {
             kunden.add(kunde);
         }
 
+        DBManager.closeConnection();
         rs.close();
         stmt.close();
         return kunden;
@@ -156,7 +158,7 @@ public class KundenService {
      * @throws SQLException If a database error occurs
      */
     public static Konto getKontoByKontoNr(Connection con, String kontoNr) throws SQLException {
-        // Als schauen, ob es Girokonto ist
+        // Als Erstes schauen, ob es Girokonto ist
         String queryGK = "SELECT * FROM girokonto WHERE kontoNr = ?";
         try (PreparedStatement ps = con.prepareStatement(queryGK)) {
             ps.setString(1, kontoNr);
@@ -188,7 +190,6 @@ public class KundenService {
                 }
             }
         }
-
         return null;
     }
 }

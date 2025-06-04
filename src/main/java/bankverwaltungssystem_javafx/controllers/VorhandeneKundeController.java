@@ -7,16 +7,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
-import javafx.scene.input.MouseEvent;
-
 import java.io.IOException;
 import java.util.List;
 
 public class VorhandeneKundeController {
     @FXML
     private ListView<Kunde> lvKunde;
-    @FXML
-    private Button btnOK;
 
     private KundenService kundenService;
 

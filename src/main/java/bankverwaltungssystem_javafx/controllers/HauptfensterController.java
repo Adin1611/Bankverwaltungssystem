@@ -11,7 +11,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.sql.*;
 import java.util.List;
@@ -29,14 +28,7 @@ public class HauptfensterController {
     @FXML
     private RadioButton btnNKKredWuerdigkeitJa;
     @FXML
-    private RadioButton btnNKKredWuerdigkeitNein;
-    @FXML
-    private ToggleGroup btnKreWuerdigkeit;
-
-    @FXML
     private TextField txtVKName;
-    @FXML
-    private Button btnVKSuchen;
 
     private KundenService kundenService;
 

@@ -1,29 +1,18 @@
 package bankverwaltungssystem_javafx.models;
 
 import bankverwaltungssystem_javafx.application.DBManager;
-import bankverwaltungssystem_javafx.application.FensterManager;
-import bankverwaltungssystem_javafx.controllers.VorhandeneKundeController;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.stage.Stage;
 import javafx.util.Callback;
-
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
 
 /**
  * Die Klasse Kunde repraesentiert einen Bankkunden und enthaelt Informationen wie Name, Wohnort,
@@ -80,16 +69,6 @@ public class Kunde {
         this.girokontenListe = FXCollections.observableArrayList();
         this.sparkontenListe = FXCollections.observableArrayList();
     }
-
-    /* Dieser Konstruktor dient nur als Test für die BankTest-Klasse
-    public Kunde(String name, String ort, String email, boolean kreWuerdigkeit, int kundeID){
-        this.name = name;
-        this.ort = ort;
-        this.email = email;
-        this.kreWuerdigkeit = kreWuerdigkeit;
-        this.kundeID = kundeID;
-    }
-     */
 
     /**
      * Liefert den Namen des Kunden.
@@ -224,6 +203,8 @@ public class Kunde {
             psDaten.executeUpdate();
             psDaten.close();
         }
+
+        DBManager.closeConnection();
         psAbfrageGiroKonto.close();
         rsAbfrageGiroKonto.close();
         return new GiroKonto(kontoNr,kontoStand,ueberziehungsLimit,negativZinssatz,positivZinssatz,spesen);
@@ -256,6 +237,7 @@ public class Kunde {
             girokonten.add(girokonto);
         }
 
+        DBManager.closeConnection();
         rs.close();
         stmt.close();
         return girokonten;
@@ -342,6 +324,8 @@ public class Kunde {
             psDaten.executeUpdate();
             psDaten.close();
         }
+
+        DBManager.closeConnection();
         psAbfrageSparKonto.close();
         rsAbfrageSparKonto.close();
         return new SparKonto(kontoNr,kontoStand,zinssatz);
@@ -370,6 +354,7 @@ public class Kunde {
             sparkonten.add(sparkonto);
         }
 
+        DBManager.closeConnection();
         rs.close();
         stmt.close();
         return sparkonten;
@@ -402,35 +387,5 @@ public class Kunde {
     public void setSparkontenListe(List<SparKonto> sparkonten) {
         sparkontenListe.clear();
         sparkontenListe.addAll(sparkonten);
-    }
-
-    /**
-     * Druckt einen Kontoauszug fuer das angegebene Girokonto des Kunden.
-     *
-     * @param giroKonto Das Girokonto, fuer das ein Kontoauszug gedruckt werden soll.
-     * @param name Der Name des Kunden.
-     * @param ort Der Wohnort des Kunden.
-     * @param kid Die Kunden-ID.
-     */
-    public void druckeKontoauszugGiroKonto(GiroKonto giroKonto, String name, String ort, int kid){
-        System.out.println("Name: " + name + "\nOrt: " + ort + "\nEmail: " + email + "\nIdentifikationsNr: " + identifikationsNr + "\nKreditwürdigkeit (true/false): " + kreWuerdigkeit +
-                "\nKontoNr: " + giroKonto.getKontoNr() + "\nKontostand: " + giroKonto.getKontoStand() + "\nKontoAktiv (true/false): " + giroKonto.isKontoAktiv() +
-                "\nEinnahmen: " + giroKonto.getSummeEinzahlungen() + "\nAusgaben: " + giroKonto.getSummeAuszahlungen() + "\nÜberziehungslimit: " + giroKonto.getUeberziehungsLimit() +
-                "\nNegativ-Zinssatz: " + giroKonto.getNegativZinssatz() + "\nPositiv-Zinssatz: " + giroKonto.getPositivZinssatz() + "\nSpesen: " + giroKonto.getSpesen() +
-                "\nKundeID: " + kid);
-    }
-
-    /**
-     * Druckt einen Kontoauszug fuer das angegebene Sparkonto des Kunden.
-     *
-     * @param sparKonto Das Sparkonto, fuer das ein Kontoauszug gedruckt werden soll.
-     * @param name Der Name des Kunden.
-     * @param ort Der Wohnort des Kunden.
-     * @param kid Die Kunden-ID.
-     */
-    public void druckeKontoauszugSparKonto(SparKonto sparKonto, String name, String ort, int kid){
-        System.out.println("Name: " + name + "\nOrt: " + ort + "\nEmail: " + email + "\nIdentifikationsNr: " + identifikationsNr + "\nKreditwürdigkeit (true/false): " + kreWuerdigkeit + "\nKontoNr: " + sparKonto.getKontoNr() +
-                "\nKontostand: " + sparKonto.getKontoStand() + "\nKontoAktiv (true/false): " + sparKonto.isKontoAktiv() + "\nEinnahmen: " + sparKonto.getSummeEinzahlungen() +
-                "\nAusgaben: " + sparKonto.getSummeAuszahlungen() + "\nZinssatz: " + sparKonto.getZinssatz() + "\nKundeID: " + kid);
     }
 }

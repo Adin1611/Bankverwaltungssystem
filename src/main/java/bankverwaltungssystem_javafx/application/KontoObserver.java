@@ -18,14 +18,13 @@ public class KontoObserver {
         listeners.add(listener);
     }
 
-    public static void removeListener(Runnable listener) {
-        listeners.remove(listener);
-    }
-
-    public static void notifyListeners() {
-        Platform.runLater(() -> {
-            for (Runnable listener : listeners) {
-                listener.run();
+    public static void benachrichtigeListeners() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                for (Runnable listener : listeners) {
+                    listener.run();
+                }
             }
         });
     }

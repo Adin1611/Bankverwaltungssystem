@@ -1,8 +1,5 @@
 package bankverwaltungssystem_javafx.models;
 
-import javafx.beans.property.SimpleDoubleProperty;
-
-import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -47,14 +44,6 @@ public abstract class Konto {
         this.kontoAktiv = true;
     }
 
-    /* Dieser Konstruktor dient nur als Test für die BankTest-Klasse
-    public Konto(long kontoNr, double kontoStand){
-        this.kontoNr = kontoNr;
-        this.kontoStand = kontoStand;
-        this.kontoAktiv = true;
-    }
-     */
-
     /**
      * Abstrakte Methode zum Abrufen der Kontonummer.
      *
@@ -93,7 +82,7 @@ public abstract class Konto {
 
     public abstract void setSummeEinzahlungen(double summeEinzahlungen);
     public abstract void setSummeAuszahlungen(double summeAuszahlungen);
-    //public abstract void setKontoStand(double kontostand);
+
     /**
      * Abstrakte Methode zum Durchfuehren einer Auszahlung von einem Konto.
      *
