@@ -65,7 +65,7 @@ public class KontoAnlegenVKController {
         kunde = KundenService.getKundeById(con);
         GiroKonto giroKonto = kunde.eroeffneGiroKonto(kontoNr, kontostand, kontoAktiv, spesen, ueberziehunslimit, negativZinssatz, positivZinssatz);
         GKDashboardController controller = FensterManager.oeffneFensterUndHoleController(
-                "/bankverwaltungssystem_javafx/gkDashboard.fxml", "Girokonto-Dashboard", event);
+                    "/bankverwaltungssystem_javafx/gkDashboard.fxml", "Girokonto-Dashboard", event);
         controller.setGiroKonto(giroKonto);
         DBManager.closeConnection();
     }

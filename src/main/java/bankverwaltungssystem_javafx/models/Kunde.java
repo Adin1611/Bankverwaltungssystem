@@ -169,7 +169,6 @@ public class Kunde {
             alert.setHeaderText("Ungültiger Kontostand");
             alert.setContentText("Der Kontostand darf nicht negativ sein. Bitte geben Sie einen positiven Wert ein.");
             alert.showAndWait();
-            throw new IllegalArgumentException("Kontostand darf nicht negativ sein");
         }
 
         // Überprüfen, ob es das Girokonto schon gibt, also ob das Girokonto schon in der Datenbank vorhanden ist
@@ -182,13 +181,10 @@ public class Kunde {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Girokonto Fehler");
             alert.setHeaderText("Konto bereits vorhanden");
-            alert.setContentText("Ein Girokonto mit dieser Kontonummer existiert bereits.");
+            alert.setContentText("Ein Girokonto mit dieser Kontonummer existiert bereits. Bitte geben Sie eine andere Kontonummer ein.");
             alert.showAndWait();
-            throw new SQLException("Ein Girokonto mit dieser Kontonummer existiert bereits.");
         }
-
-        else {
-            // Daten in die Datenbank einfügen
+        else { // Daten in die Datenbank einfügen
             String sqlDaten = "INSERT INTO girokonto (kontoNr, kontoStand, kontoAktiv, summeEinzahlungen, summeAuszahlungen, " +
                     "ueberziehungsLimit, negativZinssatz, positivZinssatz, spesen, kid) VALUES (?,?,?,0,0,?,?,?,?,?)";
             PreparedStatement psDaten = con.prepareStatement(sqlDaten);
@@ -293,7 +289,6 @@ public class Kunde {
             alert.setHeaderText("Ungültiger Kontostand");
             alert.setContentText("Der Kontostand darf nicht negativ sein. Bitte geben Sie einen positiven Wert ein.");
             alert.showAndWait();
-            throw new IllegalArgumentException("Kontostand darf nicht negativ sein");
         }
 
         // Überprüfen, ob es das Girokonto schon gibt, also ob das Girokonto schon in der Datenbank vorhanden ist
@@ -308,7 +303,6 @@ public class Kunde {
             alert.setHeaderText("Konto bereits vorhanden");
             alert.setContentText("Ein Sparkonto mit dieser Kontonummer existiert bereits.");
             alert.showAndWait();
-            throw new SQLException("Ein Sparkonto mit dieser Kontonummer existiert bereits.");
         }
 
         else {
