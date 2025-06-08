@@ -9,20 +9,27 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Die Klasse SparKonto erbt von der abstrakten Klasse Konto und repraesentiert ein Sparkonto mit spezifischen Methoden.
+ * Repräsentiert ein Sparkonto in der Bankanwendung.
+ * <p>
+ * Ein Sparkonto ist ein spezielles Konto mit ausschließlich positiven Zinsen.
+ * Es bietet Methoden zum Ein- und Auszahlen, zur Zinsberechnung sowie zur Überweisung.
+ * Änderungen am Kontostand oder an Transaktionen benachrichtigen automatisch registrierte Listener
+ * mittels des {@link KontoObserver}.
  */
 public class SparKonto extends Konto{
 
     /**
-     * Der positive Zinssatz fuer dieses Sparkonto.
+     * Der Zinssatz, der auf Guthaben angewendet wird.
+     * Dieser Wert ist immer positiv, da es bei .
      */
-    private double zinssatz; // ist immer positiv, weil es bei einem Sparkonto nur positive Zinssätze gibt
+    private double zinssatz;
 
     /**
-     * Erzeugt ein SparKonto-Objekt und initialisiert es mit Benutzereingaben.
+     * Konstruktor zur Erstellung eines Sparkontos mit Startwerten.
      *
-     * @param kontoStand Der Kontostand des Sparkontos
-     * @param zinssatz Der Zinssatz des Sparkontos
+     * @param kontoNr   Die eindeutige Kontonummer.
+     * @param kontoStand Der Startkontostand.
+     * @param zinssatz  Der positive Zinssatz des Kontos.
      */
     public SparKonto(String kontoNr, double kontoStand, double zinssatz){
         super(kontoNr,kontoStand);
@@ -33,6 +40,9 @@ public class SparKonto extends Konto{
         summeAuszahlungen = 0.0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getKontoNr(){
         return this.kontoNr;
@@ -71,24 +81,30 @@ public class SparKonto extends Konto{
     }
 
     /**
-     * Gibt den Zinssatz des Sparkontos zurueck.
-     *
-     * @return Der Zinssatz.
+     * {@inheritDoc}
      */
-    public double getZinssatz() {
-        return zinssatz;
-    }
-
     @Override
     public void setSummeEinzahlungen(double summeEinzahlungen){
         this.summeEinzahlungen = summeEinzahlungen;
         KontoObserver.benachrichtigeListeners();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setSummeAuszahlungen(double summeAuszahlungen){
         this.summeAuszahlungen = summeAuszahlungen;
         KontoObserver.benachrichtigeListeners();
+    }
+
+    /**
+     * Gibt den Zinssatz des Sparkontos zurueck.
+     *
+     * @return Der Zinssatz.
+     */
+    public double getZinssatz() {
+        return zinssatz;
     }
 
     /**
@@ -281,10 +297,10 @@ public class SparKonto extends Konto{
     }
 
     /**
-     * Fuehrt eine Monatliche-Einzahlung auf das Girokonto durch.
+     * Führt eine monatliche automatische Einzahlung auf das Sparkonto durch.
      *
-     * @param betrag Der einzuzahlende Betrag.
-     * @throws SQLException Wenn ein Datenbankfehler auftritt.
+     * @param betrag Der Betrag, der monatlich eingezahlt wird.
+     * @throws SQLException wenn ein Fehler beim Datenbankzugriff auftritt.
      */
     public void monatlicheEinzahlung(double betrag) throws SQLException{
         Connection con = DBManager.getConnection();

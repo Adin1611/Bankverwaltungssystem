@@ -20,37 +20,39 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Controller zur Kontoeröffnung und -verwaltung für bereits vorhandene Kunden.
+ */
 public class KontoAnlegenVKController {
 
-    @FXML
-    private TextField txtGKKontoNr;
-    @FXML
-    private TextField txtGKKontostand;
-    @FXML
-    private RadioButton btnGKKontoAktivJa;
-    @FXML
-    private TextField txtGKSpesen;
-    @FXML
-    private TextField txtGKUeberziehungslimit;
-    @FXML
-    private TextField txtGKNegativZinssatz;
-    @FXML
-    private TextField txtGKPositivZinssatz;
-    @FXML
-    private TextField txtSKKontoNr;
-    @FXML
-    private TextField txtSKKontostand;
-    @FXML
-    private RadioButton btnSKKontoAktivJa;
-    @FXML
-    private TextField txtSKZinssatz;
+    /** GUI-Komponenten für das Girokonto */
+    @FXML private TextField txtGKKontoNr;
+    @FXML private TextField txtGKKontostand;
+    @FXML private RadioButton btnGKKontoAktivJa;
+    @FXML private TextField txtGKSpesen;
+    @FXML private TextField txtGKUeberziehungslimit;
+    @FXML private TextField txtGKNegativZinssatz;
+    @FXML private TextField txtGKPositivZinssatz;
 
+    /** GUI-Komponenten für das Sparkonto */
+    @FXML private TextField txtSKKontoNr;
+    @FXML private TextField txtSKKontostand;
+    @FXML private RadioButton btnSKKontoAktivJa;
+    @FXML private TextField txtSKZinssatz;
+
+    /** Der zu verwaltende Kunde */
     private Kunde kunde;
 
+    /**
+     * Setzt den Kunden.
+     *
+     * @param kunde Der ausgewählte Kunde
+     */
     public void setKunde(Kunde kunde) {
         this.kunde = kunde;
     }
 
+    /** Siehe NK-Version: Girokonto eröffnen */
     @FXML
     private void giroKontoEroeffnen(ActionEvent event) throws IOException, SQLException {
         String kontoNr = txtGKKontoNr.getText().toUpperCase().trim();
@@ -70,6 +72,7 @@ public class KontoAnlegenVKController {
         DBManager.closeConnection();
     }
 
+    /** Siehe NK-Version: Sparkonto eröffnen */
     @FXML
     private void sparKontoEroeffnen(ActionEvent event) throws IOException, SQLException {
         String kontoNr = txtSKKontoNr.getText().toUpperCase().trim();
@@ -86,6 +89,9 @@ public class KontoAnlegenVKController {
         DBManager.closeConnection();
     }
 
+    /**
+     * Zeigt vorhandene Girokonten des Kunden an.
+     */
     @FXML
     private void girokontenSuchen(ActionEvent event) throws IOException, SQLException {
         Connection con = DBManager.getConnection();
@@ -112,6 +118,9 @@ public class KontoAnlegenVKController {
         DBManager.closeConnection();
     }
 
+    /**
+     * Zeigt vorhandene Sparkonten des Kunden an.
+     */
     @FXML
     private void sparkontenSuchen(ActionEvent event) throws IOException, SQLException {
         Connection con = DBManager.getConnection();

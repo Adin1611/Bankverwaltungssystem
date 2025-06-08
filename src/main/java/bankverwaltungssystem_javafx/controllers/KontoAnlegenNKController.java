@@ -13,36 +13,45 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Controller zur Kontoeröffnung für neue Kunden.
+ */
 public class KontoAnlegenNKController {
-    @FXML
-    private TextField txtGKKontoNr;
-    @FXML
-    private TextField txtGKKontostand;
-    @FXML
-    private RadioButton btnGKKontoAktivJa;
-    @FXML
-    private TextField txtGKSpesen;
-    @FXML
-    private TextField txtGKUeberziehungslimit;
-    @FXML
-    private TextField txtGKNegativZinssatz;
-    @FXML
-    private TextField txtGKPositivZinssatz;
-    @FXML
-    private TextField txtSKKontoNr;
-    @FXML
-    private TextField txtSKKontostand;
-    @FXML
-    private RadioButton btnSKKontoAktivJa;
-    @FXML
-    private TextField txtSKZinssatz;
 
+    /** GUI-Komponenten für das Girokonto */
+    @FXML private TextField txtGKKontoNr;
+    @FXML private TextField txtGKKontostand;
+    @FXML private RadioButton btnGKKontoAktivJa;
+    @FXML private TextField txtGKSpesen;
+    @FXML private TextField txtGKUeberziehungslimit;
+    @FXML private TextField txtGKNegativZinssatz;
+    @FXML private TextField txtGKPositivZinssatz;
+
+    /** GUI-Komponenten für das Sparkonto */
+    @FXML private TextField txtSKKontoNr;
+    @FXML private TextField txtSKKontostand;
+    @FXML private RadioButton btnSKKontoAktivJa;
+    @FXML private TextField txtSKZinssatz;
+
+    /** Aktuelle Kunde */
     private Kunde kunde;
 
+    /**
+     * Setzt das Kunde-Objekt.
+     *
+     * @param kunde Der zugeordnete Kunde
+     */
     public void setKunde(Kunde kunde) {
         this.kunde = kunde;
     }
 
+    /**
+     * Erstellt ein neues Girokonto und öffnet das Dashboard.
+     *
+     * @param event Das auslösende Ereignis
+     * @throws IOException Bei Fehlern beim Laden
+     * @throws SQLException Bei Datenbankfehlern
+     */
     @FXML
     private void giroKontoEroeffnen(ActionEvent event) throws IOException, SQLException {
         String kontoNr = txtGKKontoNr.getText().toUpperCase().trim();
@@ -62,6 +71,13 @@ public class KontoAnlegenNKController {
         DBManager.closeConnection();
     }
 
+    /**
+     * Erstellt ein neues Sparkonto und öffnet das Dashboard.
+     *
+     * @param event Das auslösende Ereignis
+     * @throws IOException Bei Fehlern beim Laden
+     * @throws SQLException Bei Datenbankfehlern
+     */
     @FXML
     private void sparKontoEroeffnen(ActionEvent event) throws IOException, SQLException {
         String kontoNr = txtSKKontoNr.getText().toUpperCase().trim();

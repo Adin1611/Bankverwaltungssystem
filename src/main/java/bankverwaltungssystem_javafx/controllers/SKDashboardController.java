@@ -16,41 +16,54 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * Controller für das Sparkonto-Dashboard.
+ * Verwaltet UI-Elemente und Aktionen für Einzahlungen, Auszahlungen, Überweisungen, Zinsberechnung usw.
+ */
 public class SKDashboardController implements Initializable {
-    @FXML
-    private Label lblSKKontoNr2;
-    @FXML
-    private Label lblSKKontoAktiv2;
-    @FXML
-    private Label lblSKEinzahlungen2;
-    @FXML
-    private Label lblSKAuszahlungen2;
-    @FXML
-    private Label lblSKZinssatz2;
-    @FXML
-    private Label lblSKKontostand;
-    @FXML
-    private TextField txtSKEinzahlungBetrag;
-    @FXML
-    private TextField txtSKAuszahlungBetrag;
-    @FXML
-    private TextField txtSKUeberweisungBetrag;
-    @FXML
-    private TextField txtSKUeberweisungKontoNr;
 
+    /** Anzeige der Kontonummer */
+    @FXML private Label lblSKKontoNr2;
+    /** Anzeige des Kontoaktivitätsstatus */
+    @FXML private Label lblSKKontoAktiv2;
+    /** Anzeige der Summe der Einzahlungen */
+    @FXML private Label lblSKEinzahlungen2;
+    /** Anzeige der Summe der Auszahlungen */
+    @FXML private Label lblSKAuszahlungen2;
+    /** Anzeige des Zinssatzes */
+    @FXML private Label lblSKZinssatz2;
+    /** Anzeige des aktuellen Kontostands */
+    @FXML private Label lblSKKontostand;
+
+    /** Eingabefeld für Einzahlung */
+    @FXML private TextField txtSKEinzahlungBetrag;
+    /** Eingabefeld für Auszahlung */
+    @FXML private TextField txtSKAuszahlungBetrag;
+    /** Eingabefeld für Überweisungsbetrag */
+    @FXML private TextField txtSKUeberweisungBetrag;
+    /** Eingabefeld für Empfängerkontonummer */
+    @FXML private TextField txtSKUeberweisungKontoNr;
+
+    /** Das aktive Sparkonto */
     private SparKonto sparKonto;
 
+    /** Initialisiert den Controller und registriert UI-Update-Listener. */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Füge einen Listener hinzu, der die UI aktualisiert, wenn sich die Kontodaten ändern
         KontoObserver.addListener(this::updateUI);
     }
 
+    /**
+     * Setzt das anzuzeigende Sparkonto.
+     * @param konto Das Sparkonto-Objekt
+     */
     public void setSparKonto(SparKonto konto) {
         this.sparKonto = konto;
         updateUI();
     }
 
+    /** Aktualisiert die UI-Elemente mit den aktuellen Kontodaten. */
     private void updateUI() {
         if (sparKonto != null) {
             lblSKKontostand.setText(String.format("%.2f", sparKonto.getKontoStand()));
@@ -62,6 +75,10 @@ public class SKDashboardController implements Initializable {
         }
     }
 
+    /**
+     * Führt eine monatliche Einzahlung durch.
+     * @throws SQLException Bei Datenbankfehlern
+     */
     @FXML
     private void monatlichEinzahlenSK() throws SQLException {
         double betrag = Double.parseDouble(txtSKEinzahlungBetrag.getText());
@@ -69,6 +86,10 @@ public class SKDashboardController implements Initializable {
         txtSKEinzahlungBetrag.clear();
     }
 
+    /**
+     * Führt eine Auszahlung durch.
+     * @throws SQLException Bei Datenbankfehlern
+     */
     @FXML
     private void auszahlenSK() throws SQLException {
         double betrag = Double.parseDouble(txtSKAuszahlungBetrag.getText());
@@ -76,6 +97,10 @@ public class SKDashboardController implements Initializable {
         txtSKAuszahlungBetrag.clear();
     }
 
+    /**
+     * Führt eine Überweisung an ein anderes Konto durch.
+     * @throws SQLException Bei Datenbankfehlern
+     */
     @FXML
     private void ueberweisenSK() throws SQLException {
         double betrag = Double.parseDouble(txtSKUeberweisungBetrag.getText());
@@ -88,12 +113,21 @@ public class SKDashboardController implements Initializable {
         DBManager.closeConnection();
     }
 
+    /**
+     * Führt die Zinsberechnung für das Sparkonto durch.
+     * @throws SQLException Bei Datenbankfehlern
+     */
     @FXML
     private void berechneZinsenSK() throws SQLException {
         sparKonto.berechneZinsen();
     }
 
-
+    /**
+     * Öffnet das Fenster zur Anzeige des Kontoauszugs.
+     * @param event Das auslösende Ereignis
+     * @throws SQLException Bei Datenbankfehlern
+     * @throws IOException Wenn das Fenster nicht geladen werden kann
+     */
     @FXML
     private void kontoauszugDrucken(ActionEvent event) throws SQLException, IOException {
         SKKontoauszugController controller = FensterManager.oeffneFensterUndHoleController(

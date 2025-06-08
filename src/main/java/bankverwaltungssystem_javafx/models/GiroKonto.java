@@ -9,7 +9,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Die Klasse GiroKonto erbt von der abstrakten Klasse Konto und repraesentiert ein Girokonto mit spezifischen Methoden.
+ * Die Klasse Girokonto erweitert {@link Konto} und stellt ein konkretes Modell
+ * für ein Girokonto mit zusätzlichen Eigenschaften wie Überziehungslimit, Zinssätzen
+ * und Spesen dar. Sie beinhaltet Methoden zur Durchführung von Bankaktionen wie
+ * Ein- und Auszahlungen, Überweisungen, Zinsberechnung und Spesenabzug.
+ * <p>
+ * Änderungen am Kontostand benachrichtigen registrierte UI-Elemente über {@link KontoObserver}.
  */
 public class GiroKonto extends Konto {
 
@@ -19,12 +24,12 @@ public class GiroKonto extends Konto {
     private double ueberziehungsLimit;
 
     /**
-     * Der Zinssatz, der auf einen negativen Kontostand angewendet wird.
+     * Zinssatz für negative Kontostände
      */
     private double negativZinssatz;
 
     /**
-     * Der Zinssatz, der auf einen positiven Kontostand angewendet wird.
+     * Zinssatz für positive Kontostände (z. B. 2.0 für 2 %).
      */
     private double positivZinssatz;
 
@@ -35,13 +40,14 @@ public class GiroKonto extends Konto {
 
 
     /**
-     * Erzeugt ein GiroKonto-Objekt und initialisiert es mit Benutzereingaben.
+     * Konstruktor zum Erstellen eines GiroKontos.
      *
-     * @param kontoStand Der Kontostand des Girokontos
-     * @param ueberziehungsLimit Das Ueberziehungslimit des Girokontos
-     * @param negativZinssatz Der Negativ-Zinssatz des Girokontos
-     * @param positivZinssatz Der Positiv-Zinssatz des Girokontos
-     * @param spesen Die Spesen des Girokontos
+     * @param kontoNr             Kontonummer
+     * @param kontoStand          Aktueller Stand
+     * @param ueberziehungsLimit  Erlaubtes Überziehungslimit
+     * @param negativZinssatz     Zinssatz bei negativem Stand
+     * @param positivZinssatz     Zinssatz bei positivem Stand
+     * @param spesen              Spesenbetrag
      */
     public GiroKonto(String kontoNr, double kontoStand, double ueberziehungsLimit, double negativZinssatz, double positivZinssatz,
                      double spesen){
@@ -56,6 +62,9 @@ public class GiroKonto extends Konto {
         summeAuszahlungen = 0.0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getKontoNr(){
         return this.kontoNr;
@@ -93,12 +102,18 @@ public class GiroKonto extends Konto {
         return summeAuszahlungen;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setSummeEinzahlungen(double summeEinzahlungen){
         this.summeEinzahlungen = summeEinzahlungen;
         KontoObserver.benachrichtigeListeners();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setSummeAuszahlungen(double summeAuszahlungen){
         this.summeAuszahlungen = summeAuszahlungen;
@@ -350,7 +365,7 @@ public class GiroKonto extends Konto {
      * Fuehrt eine Einzahlung auf das Girokonto durch.
      *
      * @param betrag Der einzuzahlende Betrag.
-     * @throws SQLException Wenn ein Datenbankfehler auftritt.
+     * @throws SQLException wenn ein Datenbankfehler auftritt.
      */
     public void einzahlen(double betrag) throws SQLException{
         Connection con = DBManager.getConnection();
@@ -394,8 +409,7 @@ public class GiroKonto extends Konto {
     /**
      * Zieht die Spesen von dem Girokonto ab.
      *
-     * @param con Die Verbindung zur Datenbank
-     * @throws SQLException Wenn ein Datenbankfehler auftritt.
+     * @throws SQLException wenn ein Datenbankfehler auftritt.
      */
     public void spesenAbziehen() throws SQLException {
         Connection con = DBManager.getConnection();

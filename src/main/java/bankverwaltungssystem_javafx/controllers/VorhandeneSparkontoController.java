@@ -13,13 +13,22 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Controller zur Anzeige und Auswahl vorhandener Sparkonten.
+ */
 public class VorhandeneSparkontoController {
-    @FXML
-    private ListView<SparKonto> lvSparkonto;
 
+    /** ListView zur Anzeige der Sparkonten */
+    @FXML private ListView<SparKonto> lvSparkonto;
+
+    /** Der zugehörige Kunde */
     private Kunde kunde;
 
-
+    /**
+     * Setzt die Sparkontenliste und initialisiert die Anzeige.
+     * @param sparkonten Liste der Sparkonten
+     * @throws SQLException Bei Datenbankfehlern
+     */
     public void setSparkontenListe(List<SparKonto> sparkonten) throws SQLException {
         Connection con = DBManager.getConnection();
         kunde = KundenService.getKundeById(con);
@@ -28,6 +37,11 @@ public class VorhandeneSparkontoController {
         DBManager.closeConnection();
     }
 
+    /**
+     * Öffnet das Dashboard für das ausgewählte Sparkonto.
+     * @param event Das auslösende Ereignis
+     * @throws IOException Wenn das Fenster nicht geladen werden kann
+     */
     @FXML
     private void sparkontoAuswaehlen(ActionEvent event) throws IOException {
         SparKonto selectedSK = lvSparkonto.getSelectionModel().getSelectedItem();

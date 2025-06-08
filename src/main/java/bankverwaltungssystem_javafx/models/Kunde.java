@@ -15,9 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Die Klasse Kunde repraesentiert einen Bankkunden und enthaelt Informationen wie Name, Wohnort,
- * E-Mail-Adresse, Kreditwuerdigkeit und Kunden-ID. Sie ermoeglicht auch die Eroeffnung von Girokonten
- * und Sparkonten fuer den Kunden.
+ * Die Klasse Kunde repräsentiert einen Bankkunden.
+ * <p>
+ * Ein Kunde kann mehrere Giro- und Sparkonten besitzen. Die Klasse erlaubt
+ * das Anlegen dieser Konten sowie deren Verwaltung über ListViews.
  */
 public class Kunde {
 
@@ -46,18 +47,25 @@ public class Kunde {
      */
     private boolean kreWuerdigkeit;
 
+    /**
+     * Die ObservableList, die alle gefundenen Girokonten enthält.
+     */
     private ObservableList<GiroKonto> girokontenListe;
+
+    /**
+     * Die ObservableList, die alle gefundenen Sparkonten enthält.
+     */
     private ObservableList<SparKonto> sparkontenListe;
 
 
     /**
-     * Erzeugt ein Kunde-Objekt und initialisiert es mit Benutzereingaben.
+     * Konstruktor zur Initialisierung eines Kundenobjekts.
      *
-     * @param name Der Name des Kunden.
-     * @param ort Der Ort des Kunden.
-     * @param email Die E-Mail des Kunden.
-     * @param identifikationsNr Die Identifikationsnummer des Kunden.
-     * @param kreWuerdigkeit Die Kreditwuerdigkeit des Kunden.
+     * @param name              Name des Kunden
+     * @param ort               Wohnort des Kunden
+     * @param email             E-Mail-Adresse des Kunden
+     * @param identifikationsNr Eindeutige ID zur Kundenidentifikation
+     * @param kreWuerdigkeit    Kreditwürdigkeit des Kunden
      */
     public Kunde(String name, String ort, String email, String identifikationsNr, boolean kreWuerdigkeit) {
         this.name = name;
@@ -88,9 +96,15 @@ public class Kunde {
         return ort;
     }
 
+    /**
+     * Liefert die Email des Kunden.
+     *
+     * @return Die Email des Kunden.
+     */
     public String getEmail(){
         return email;
     }
+
     /**
      * Liefert die Identifikationsnummer des Kunden.
      *
@@ -100,16 +114,21 @@ public class Kunde {
         return identifikationsNr;
     }
 
+    /**
+     * Liefert die Kreditwuerdigkeit des Kunden.
+     *
+     * @return Ob der Kunde kreditwuerdig ist.
+     */
     public boolean getKreWuerdigkeit(){
         return kreWuerdigkeit;
     }
 
     /**
-     * Liefert die Kunden-ID anhand der Identifikationsnummer aus der Datenbank.
+     * Ermittelt die Kundennummer aus der Datenbank.
      *
-     * @param con Die Verbindung zur Datenbank
-     * @return Die Kunden-ID.
-     * @throws SQLException Wenn ein Datenbankfehler auftritt.
+     * @param con Datenbankverbindung
+     * @return Kunden-ID (kid)
+     * @throws SQLException bei SQL-Fehlern
      */
     public int getKundeID(Connection con) throws SQLException{
         String abfrageId = "SELECT kid FROM kunde WHERE identifikationsNr = '" + identifikationsNr + "'";
@@ -131,7 +150,7 @@ public class Kunde {
      *
      * @param con Die Verbindung zur Datenbank.
      * @return Eine Zeichenkettendarstellung des Kunden.
-     * @throws SQLException Wenn ein Datenbankfehler auftritt.
+     * @throws SQLException wenn ein Datenbankfehler auftritt.
      */
     public String toString(Connection con) throws SQLException{
         return "Kunde{" +
@@ -145,9 +164,16 @@ public class Kunde {
 
     /**
      * Eroeffnet ein neues Girokonto fuer den Kunden.
-     *
+     * @param kontoNr Kontonummer
+     * @param kontoStandStr Kontostand (als String)
+     * @param kontoAktiv ob das Konto aktiv isr
+     * @param spesenStr Spesen (als String)
+     * @param ueberziehungsLimitStr Ueberziehungslimit (als String)
+     * @param negativZinssatzStr Negativ-Zinssatz (als String)
+     * @param positivZinssatzStr Positiv-Zinssatz (als String)
      * @return Das neu eroeffnete Girokonto.
-     * @throws SQLException Wenn ein Datenbankfehler auftritt.
+     * @throws SQLException wenn ein Datenbankfehler auftritt.
+     * @throws IllegalArgumentException wenn ein illegales Argument eingeben wird
      */
     public GiroKonto eroeffneGiroKonto(String kontoNr, String kontoStandStr, boolean kontoAktiv,
                                        String spesenStr, String ueberziehungsLimitStr,
@@ -206,6 +232,13 @@ public class Kunde {
         return new GiroKonto(kontoNr,kontoStand,ueberziehungsLimit,negativZinssatz,positivZinssatz,spesen);
     }
 
+    /**
+     * Sucht alle Girokonten eines Kunden.
+     *
+     * @param kid Kunden-ID
+     * @return Liste der Girokonten
+     * @throws SQLException wenn ein Datenbankfehler auftritt.
+     */
     public List<GiroKonto> sucheGiroKonto(int kid) throws SQLException {
         List<GiroKonto> girokonten = new ArrayList<>();
         Connection con = DBManager.getConnection();
@@ -239,6 +272,11 @@ public class Kunde {
         return girokonten;
     }
 
+    /**
+     * Initialisiert die Anzeige von Girokonten in der ListView.
+     *
+     * @param listView Die Ziel-ListView
+     */
     public void initialisiereListViewGK(ListView<GiroKonto> listView) {
         listView.setItems(girokontenListe);
         
@@ -263,16 +301,28 @@ public class Kunde {
         });
     }
 
+    /**
+     * Setzt die interne Liste der Girokonten neu.
+     * Diese Methode wird z.B verwendet, wenn Girokonten aus der Datenbank geladen wurden.
+     *
+     * @param girokonten Liste der Girokonten, die gesetzt werden soll
+     */
     public void setGirokontenListe(List<GiroKonto> girokonten) {
         girokontenListe.clear();
         girokontenListe.addAll(girokonten);
     }
 
     /**
-     * Eroeffnet ein neues Sparkonto fuer den Kunden.
+     * Legt ein neues Sparkonto für den Kunden an, sofern noch kein Konto mit der gleichen Kontonummer existiert.
+     * Es erfolgt eine Validierung des Kontostands und eine Überprüfung auf doppelte Kontonummern.
      *
-     * @return Das neu eroeffnete Sparkonto.
-     * @throws SQLException Wenn ein Datenbankfehler auftritt.
+     * @param kontoNr       Kontonummer
+     * @param kontoStandStr Kontostand (als String)
+     * @param kontoAktiv    Ob das Konto aktiv ist
+     * @param zinssatzStr   Zinssatz (als String)
+     * @return Neues Sparkonto-Objekt (wenn erfolgreich erstellt)
+     * @throws SQLException Wenn ein Fehler beim Datenbankzugriff auftritt
+     * @throws IllegalArgumentException wenn ein illegales Argument eingeben wird
      */
     public SparKonto eroeffneSparKonto(String kontoNr, String kontoStandStr, boolean kontoAktiv, String zinssatzStr)
                                        throws SQLException, IllegalArgumentException{
@@ -325,6 +375,13 @@ public class Kunde {
         return new SparKonto(kontoNr,kontoStand,zinssatz);
     }
 
+    /**
+     * Lädt alle Sparkonten eines bestimmten Kunden aus der Datenbank.
+     *
+     * @param kid Kunden-ID
+     * @return Liste der Sparkonten des Kunden
+     * @throws SQLException Wenn ein Fehler beim Datenbankzugriff auftritt
+     */
     public List<SparKonto> sucheSparKonto(int kid) throws SQLException {
         List<SparKonto> sparkonten = new ArrayList<>();
         Connection con = DBManager.getConnection();
@@ -354,6 +411,11 @@ public class Kunde {
         return sparkonten;
     }
 
+    /**
+     * Initialisiert die ListView zur Anzeige der Sparkonten in der Benutzeroberfläche.
+     *
+     * @param listView ListView, die mit Sparkonten befüllt werden soll
+     */
     public void initialisiereListViewSK(ListView<SparKonto> listView) {
         listView.setItems(sparkontenListe);
 
@@ -378,6 +440,12 @@ public class Kunde {
         });
     }
 
+    /**
+     * Setzt die interne Liste der Sparkonten neu.
+     * Wird verwendet z.B. nach einem Datenbank-Reload.
+     *
+     * @param sparkonten Liste der Sparkonten, die angezeigt werden soll
+     */
     public void setSparkontenListe(List<SparKonto> sparkonten) {
         sparkontenListe.clear();
         sparkontenListe.addAll(sparkonten);

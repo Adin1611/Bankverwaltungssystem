@@ -9,39 +9,40 @@ import javafx.scene.control.Label;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Controller-Klasse für das Girokonto-Dashboard.
+ * Sie steuert die Interaktion mit dem Benutzer für Girokonto-Operationen wie Einzahlungen, Auszahlungen usw.
+ */
 public class GKKontoauszugController {
-    @FXML
-    private Label lblName2;
-    @FXML
-    private Label lblOrt2;
-    @FXML
-    private Label lblEmail2;
-    @FXML
-    private Label lblID2;
-    @FXML
-    private Label lblKreWuerdigkeit2;
-    @FXML
-    private Label lblKontoNr2;
-    @FXML
-    private Label lblKontostand2;
-    @FXML
-    private Label lblKontoAktiv2;
-    @FXML
-    private Label lblEinzahlungen2;
-    @FXML
-    private Label lblAuszahlungen2;
-    @FXML
-    private Label lblUeberziehungslimit2;
-    @FXML
-    private Label lblNegativZinssatz2;
-    @FXML
-    private Label lblPositivZinssatz2;
-    @FXML
-    private Label lblSpesen2;
+    /** Label für Kundendaten */
+    @FXML private Label lblName2;
+    @FXML private Label lblOrt2;
+    @FXML private Label lblEmail2;
+    @FXML private Label lblID2;
+    @FXML private Label lblKreWuerdigkeit2;
 
+    /** Label für Kontodaten */
+    @FXML private Label lblKontoNr2;
+    @FXML private Label lblKontostand2;
+    @FXML private Label lblKontoAktiv2;
+    @FXML private Label lblEinzahlungen2;
+    @FXML private Label lblAuszahlungen2;
+    @FXML private Label lblUeberziehungslimit2;
+    @FXML private Label lblNegativZinssatz2;
+    @FXML private Label lblPositivZinssatz2;
+    @FXML private Label lblSpesen2;
+
+    /** Das angezeigte Girokonto */
     private GiroKonto giroKonto;
+    /** Der zugehörige Kunde */
     private Kunde kunde;
 
+    /**
+     * Übergibt das Girokonto und holt den zugehörigen Kunden aus der Datenbank.
+     *
+     * @param konto Das Girokonto-Objekt
+     * @throws SQLException Bei Datenbankfehlern
+     */
     public void setGiroKontoUndKunde(GiroKonto konto) throws SQLException {
         Connection con = DBManager.getConnection();
         this.giroKonto = konto;
@@ -50,6 +51,9 @@ public class GKKontoauszugController {
         DBManager.closeConnection();
     }
 
+    /**
+     * Aktualisiert die Benutzeroberfläche mit Kunden- und Kontodaten.
+     */
     private void updateUI() {
         if (giroKonto != null && kunde != null) {
             // Kundendaten

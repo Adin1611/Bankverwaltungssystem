@@ -9,33 +9,36 @@ import javafx.scene.control.Label;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Controller für die Anzeige des Kontoauszugs eines Sparkontos.
+ */
 public class SKKontoauszugController {
-    @FXML
-    private Label lblName2;
-    @FXML
-    private Label lblOrt2;
-    @FXML
-    private Label lblEmail2;
-    @FXML
-    private Label lblID2;
-    @FXML
-    private Label lblKreWuerdigkeit2;
-    @FXML
-    private Label lblKontoNr2;
-    @FXML
-    private Label lblKontostand2;
-    @FXML
-    private Label lblKontoAktiv2;
-    @FXML
-    private Label lblEinzahlungen2;
-    @FXML
-    private Label lblAuszahlungen2;
-    @FXML
-    private Label lblZinssatz2;
 
+    /** Label für Kundendaten */
+    @FXML private Label lblName2;
+    @FXML private Label lblOrt2;
+    @FXML private Label lblEmail2;
+    @FXML private Label lblID2;
+    @FXML private Label lblKreWuerdigkeit2;
+
+    /** Label für Kontodaten */
+    @FXML private Label lblKontoNr2;
+    @FXML private Label lblKontostand2;
+    @FXML private Label lblKontoAktiv2;
+    @FXML private Label lblEinzahlungen2;
+    @FXML private Label lblAuszahlungen2;
+    @FXML private Label lblZinssatz2;
+
+    /** Das anzuzeigende Sparkonto */
     private SparKonto sparKonto;
+    /** Der zugehörige Kunde */
     private Kunde kunde;
 
+    /**
+     * Setzt das Konto und den Kunden und aktualisiert die Oberfläche.
+     * @param konto Das Sparkonto
+     * @throws SQLException Bei Datenbankfehlern
+     */
     public void setSparKontoUndKunde(SparKonto konto) throws SQLException {
         Connection con = DBManager.getConnection();
         this.sparKonto = konto;
@@ -44,6 +47,7 @@ public class SKKontoauszugController {
         DBManager.closeConnection();
     }
 
+    /** Aktualisiert alle UI-Felder mit Kunden- und Kontodaten. */
     private void updateUI() {
         if (sparKonto != null && kunde != null) {
             // Kundendaten

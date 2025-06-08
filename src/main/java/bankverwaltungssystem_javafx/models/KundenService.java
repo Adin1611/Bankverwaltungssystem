@@ -13,15 +13,41 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Die Klasse KundenService stellt Methoden zur Verwaltung von Kunden bereit,
+ * darunter das Erstellen und Suchen von Kunden sowie das Initialisieren einer Kunden-ListView.
+ */
 public class KundenService {
+
+    /**
+     * Der aktuell aktive Kunde (statisch, um übergreifend zugänglich zu sein).
+     */
     private static Kunde kunde;
 
+    /**
+     * Die ObservableList, die alle gefundenen Kunden enthält.
+     */
     private ObservableList<Kunde> kundenListe;
 
+    /**
+     * Konstruktor für den KundenService.
+     * Initialisiert die Kundenliste als leere ObservableList.
+     */
     public KundenService() {
         this.kundenListe = FXCollections.observableArrayList();
     }
 
+    /**
+     * Erstellt einen neuen Kunden, wenn dieser noch nicht existiert, oder gibt den vorhandenen Kunden zurück.
+     *
+     * @param name           Name des Kunden
+     * @param ort            Wohnort des Kunden
+     * @param email          E-Mail-Adresse des Kunden
+     * @param id             Identifikationsnummer des Kunden
+     * @param kreditwuerdig  Kreditwürdigkeit des Kunden
+     * @return Das erstellte oder bereits vorhandene Kunden-Objekt
+     * @throws SQLException  Wenn ein Datenbankfehler auftritt
+     */
     public Kunde erstelleKunde(String name, String ort, String email, String id, boolean kreditwuerdig) throws SQLException {
         Connection con = DBManager.getConnection();
 
@@ -65,6 +91,13 @@ public class KundenService {
         }
     }
 
+    /**
+     * Sucht alle Kunden mit dem angegebenen Namen in der Datenbank.
+     *
+     * @param name Der Name, nach dem gesucht werden soll (LIKE-Abfrage)
+     * @return Liste der gefundenen Kunden
+     * @throws SQLException Bei einem Datenbankfehler
+     */
     public List<Kunde> sucheKunde(String name) throws SQLException {
         List<Kunde> kunden = new ArrayList<>();
         Connection con = DBManager.getConnection();
@@ -91,7 +124,13 @@ public class KundenService {
         stmt.close();
         return kunden;
     }
-    
+
+    /**
+     * Initialisiert die ListView zur Anzeige von Kunden.
+     * Dabei wird die Kundenliste gesetzt und eine benutzerdefinierte Darstellung definiert.
+     *
+     * @param listView Die zu initialisierende ListView
+     */
     public void initialisiereListView(ListView<Kunde> listView) {
         listView.setItems(kundenListe);
         
@@ -117,17 +156,22 @@ public class KundenService {
         });
     }
 
+    /**
+     * Setzt die angegebene Kundenliste in die ObservableList.
+     *
+     * @param kunden Liste der Kunden, die übernommen werden sollen
+     */
     public void setKundenListe(List<Kunde> kunden) {
         kundenListe.clear();
         kundenListe.addAll(kunden);
     }
 
     /**
-     * Gets a customer by their ID from the database.
+     * Holt einen Kunden anhand seiner Datenbank-ID (kid) aus der Datenbank.
      *
-     * @param con The database connection
-     * @return The customer object, or null if not found
-     * @throws SQLException If a database error occurs
+     * @param con Die Datenbankverbindung
+     * @return Das Kundenobjekt oder null, wenn kein Kunde gefunden wurde
+     * @throws SQLException Wenn ein Datenbankfehler auftritt
      */
     public static Kunde getKundeById(Connection con) throws SQLException {
         String query = "SELECT * FROM kunde WHERE kid = ?";
@@ -150,12 +194,13 @@ public class KundenService {
     }
 
     /**
-     * Gets a Konto object by its account number from the database.
+     * Holt ein Konto anhand der Kontonummer aus der Datenbank.
+     * Es wird sowohl in der Girokonto- als auch in der Sparkonto-Tabelle gesucht.
      *
-     * @param con The database connection
-     * @param kontoNr The account number to search for
-     * @return The Konto object if found, null otherwise
-     * @throws SQLException If a database error occurs
+     * @param con      Die Datenbankverbindung
+     * @param kontoNr  Die gesuchte Kontonummer
+     * @return Ein GiroKonto- oder SparKonto-Objekt, oder null wenn keines gefunden wurde
+     * @throws SQLException Wenn ein Datenbankfehler auftritt
      */
     public static Konto getKontoByKontoNr(Connection con, String kontoNr) throws SQLException {
         // Als Erstes schauen, ob es Girokonto ist

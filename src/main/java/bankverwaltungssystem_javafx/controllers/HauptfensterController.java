@@ -15,23 +15,35 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.List;
 
+/**
+ * Controller für das Hauptfenster des Bankverwaltungssystems.
+ * Erlaubt die Erstellung neuer Kunden und die Suche nach vorhandenen Kunden.
+ */
 public class HauptfensterController {
 
-    @FXML
-    private TextField txtNKName;
-    @FXML
-    private TextField txtNKOrt;
-    @FXML
-    private TextField txtNKEmail;
-    @FXML
-    private TextField txtNKID;
-    @FXML
-    private RadioButton btnNKKredWuerdigkeitJa;
-    @FXML
-    private TextField txtVKName;
+    /** Eingabefeld für den Namen eines neuen Kunden */
+    @FXML private TextField txtNKName;
+    /** Eingabefeld für den Wohnort eines neuen Kunden */
+    @FXML private TextField txtNKOrt;
+    /** Eingabefeld für die E-Mail eines neuen Kunden */
+    @FXML private TextField txtNKEmail;
+    /** Eingabefeld für die Identifikationsnummer eines neuen Kunden */
+    @FXML private TextField txtNKID;
+    /** Radiobutton für Kreditwürdigkeit: Ja */
+    @FXML private RadioButton btnNKKredWuerdigkeitJa;
+    /** Eingabefeld für die Namenssuche vorhandener Kunden */
+    @FXML private TextField txtVKName;
 
+    /** Service zur Verwaltung von Kunden */
     private KundenService kundenService;
 
+    /**
+     * Erstellt einen neuen Kunden auf Basis der eingegebenen Daten.
+     *
+     * @param event Das auslösende Ereignis
+     * @throws SQLException Bei SQL-Fehlern
+     * @throws IOException Wenn das Fenster nicht geladen werden kann
+     */
     @FXML
     private void neuenKundenErstellen(ActionEvent event) throws SQLException, IOException {
         String name = txtNKName.getText().toLowerCase().trim();
@@ -45,6 +57,13 @@ public class HauptfensterController {
         FensterManager.oeffneFenster("/bankverwaltungssystem_javafx/kontoAnlegenNK.fxml", "Konto anlegen", event);
     }
 
+    /**
+     * Sucht Kunden anhand des eingegebenen Namens und öffnet das Ergebnisfenster.
+     *
+     * @param event Das auslösende Ereignis
+     * @throws IOException Bei Fehlern beim Fensterladen
+     * @throws SQLException Bei Datenbankfehlern
+     */
     @FXML
     private void kundenSuchen(ActionEvent event) throws IOException, SQLException {
         String name = txtVKName.getText().toLowerCase().trim();

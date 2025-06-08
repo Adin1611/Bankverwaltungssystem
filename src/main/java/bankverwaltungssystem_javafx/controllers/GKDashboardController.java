@@ -17,46 +17,60 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class GKDashboardController implements Initializable {
-    @FXML
-    private Label lblGKKontoNr2;
-    @FXML
-    private Label lblGKKontoAktiv2;
-    @FXML
-    private Label lblGKEinzahlungen2;
-    @FXML
-    private Label lblGKAuszahlungen2;
-    @FXML
-    private Label lblGKUeberziehungslimit2;
-    @FXML
-    private Label lblGKNegativZinssatz2;
-    @FXML
-    private Label lblGKPositivZinssatz2;
-    @FXML
-    private Label lblGKSpesen2;
-    @FXML
-    private Label lblGKKontostand;
-    @FXML
-    private TextField txtGKEinzahlungBetrag;
-    @FXML
-    private TextField txtGKAuszahlungBetrag;
-    @FXML
-    private TextField txtGKUeberweisungBetrag;
-    @FXML
-    private TextField txtGKUeberweisungKontoNr;
+    /** Label zur Anzeige der Kontonummer */
+    @FXML private Label lblGKKontoNr2;
+    /** Label zur Anzeige ob das Konto aktiv ist */
+    @FXML private Label lblGKKontoAktiv2;
+    /** Label zur Anzeige der Summe aller Einzahlungen */
+    @FXML private Label lblGKEinzahlungen2;
+    /** Label zur Anzeige der Summe aller Auszahlungen */
+    @FXML private Label lblGKAuszahlungen2;
+    /** Label zur Anzeige des Überziehungslimits */
+    @FXML private Label lblGKUeberziehungslimit2;
+    /** Label zur Anzeige des Negativzinssatzes */
+    @FXML private Label lblGKNegativZinssatz2;
+    /** Label zur Anzeige des Positivzinssatzes */
+    @FXML private Label lblGKPositivZinssatz2;
+    /** Label zur Anzeige der Spesen */
+    @FXML private Label lblGKSpesen2;
+    /** Label zur Anzeige des Kontostands */
+    @FXML private Label lblGKKontostand;
 
+    /** Textfeld für Einzahlungsbetrag */
+    @FXML private TextField txtGKEinzahlungBetrag;
+    /** Textfeld für Auszahlungsbetrag */
+    @FXML private TextField txtGKAuszahlungBetrag;
+    /** Textfeld für Überweisungsbetrag */
+    @FXML private TextField txtGKUeberweisungBetrag;
+    /** Textfeld für Empfängerkontonummer */
+    @FXML private TextField txtGKUeberweisungKontoNr;
+
+    /** Aktives Girokonto */
     private GiroKonto giroKonto;
 
+    /**
+     * Initialisierungsmethode des Controllers.
+     * Registriert den Observer für Kontoänderungen.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Füge einen Listener hinzu, der die UI aktualisiert, wenn sich die Kontodaten ändern
         KontoObserver.addListener(this::updateUI);
     }
 
+    /**
+     * Setzt das Girokonto und aktualisiert die UI.
+     *
+     * @param konto Das Girokonto-Objekt
+     */
     public void setGiroKonto(GiroKonto konto) {
         this.giroKonto = konto;
         updateUI();
     }
 
+    /**
+     * Aktualisiert die Benutzeroberfläche mit den aktuellen Kontodaten.
+     */
     private void updateUI() {
         if (giroKonto != null) {
             lblGKKontostand.setText(String.format("%.2f", giroKonto.getKontoStand()));
@@ -71,6 +85,11 @@ public class GKDashboardController implements Initializable {
         }
     }
 
+    /**
+     * Führt eine Einzahlung aus und leert das Eingabefeld.
+     *
+     * @throws SQLException Bei Datenbankfehlern
+     */
     @FXML
     private void einzahlenGK() throws SQLException {
         double betrag = Double.parseDouble(txtGKEinzahlungBetrag.getText());
@@ -78,6 +97,11 @@ public class GKDashboardController implements Initializable {
         txtGKEinzahlungBetrag.clear();
     }
 
+    /**
+     * Führt eine Auszahlung aus und leert das Eingabefeld.
+     *
+     * @throws SQLException Bei Datenbankfehlern
+     */
     @FXML
     private void auszahlenGK() throws SQLException {
         double betrag = Double.parseDouble(txtGKAuszahlungBetrag.getText());
@@ -85,6 +109,11 @@ public class GKDashboardController implements Initializable {
         txtGKAuszahlungBetrag.clear();
     }
 
+    /**
+     * Führt eine Überweisung durch und leert die Eingabefelder.
+     *
+     * @throws SQLException Bei Datenbankfehlern
+     */
     @FXML
     private void ueberweisenGK() throws SQLException {
         double betrag = Double.parseDouble(txtGKUeberweisungBetrag.getText());
@@ -97,16 +126,33 @@ public class GKDashboardController implements Initializable {
         DBManager.closeConnection();
     }
 
+    /**
+     * Berechnet Zinsen für das Girokonto.
+     *
+     * @throws SQLException Bei Datenbankfehlern
+     */
     @FXML
     private void berechneZinsenGK() throws SQLException {
         giroKonto.berechneZinsen();
     }
 
+    /**
+     * Führt den Spesenabzug für das Konto durch.
+     *
+     * @throws SQLException Bei Datenbankfehlern
+     */
     @FXML
     private void spesenAbziehenGK() throws SQLException {
         giroKonto.spesenAbziehen();
     }
 
+    /**
+     * Öffnet das Fenster für den Kontoauszug.
+     *
+     * @param event Das auslösende Ereignis
+     * @throws SQLException Bei Datenbankfehlern
+     * @throws IOException  Bei Fehlern beim Laden des Fensters
+     */
     @FXML
     private void kontoauszugDrucken(ActionEvent event) throws SQLException, IOException {
         GKKontoauszugController controller = FensterManager.oeffneFensterUndHoleController(

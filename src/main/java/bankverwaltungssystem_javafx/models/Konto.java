@@ -3,7 +3,12 @@ package bankverwaltungssystem_javafx.models;
 import java.sql.SQLException;
 
 /**
- * Die abstrakte Klasse Konto repraesentiert ein Konto mit grundlegenden Methoden und Daten
+ * Die abstrakte Klasse Konto bildet die Basis für verschiedene Kontotypen
+ * wie {@link GiroKonto} oder {@link SparKonto}. Sie enthält allgemeine Eigenschaften
+ * und abstrakte Methoden zur Verwaltung eines Kontos.
+ *
+ * <p>Diese Klasse folgt dem Prinzip der Vererbung und stellt eine einheitliche Schnittstelle
+ * für alle Kontotypen zur Verfügung.</p>
  */
 public abstract class Konto {
 
@@ -33,10 +38,11 @@ public abstract class Konto {
     double summeAuszahlungen;
 
     /**
-     * Konstruktor fuer die Klasse Konto. Initialisiert die Kontodaten durch Benutzereingaben.
+     * Konstruktor zur Initialisierung eines Kontos mit Kontonummer und Startguthaben.
+     * Das Konto wird standardmäßig als aktiv gesetzt.
      *
-     * @param kontoNr    Die Kontonummer des Kontos.
-     * @param kontoStand Der Kontostand des jeweiligen Kontos.
+     * @param kontoNr    Die Kontonummer
+     * @param kontoStand Der Kontostand
      */
     public Konto(String kontoNr, double kontoStand){
         this.kontoNr = kontoNr;
@@ -45,70 +51,80 @@ public abstract class Konto {
     }
 
     /**
-     * Abstrakte Methode zum Abrufen der Kontonummer.
+     * Gibt die Kontonummer zurück.
      *
-     * @return Die Kontonummer des Kontos.
+     * @return die Kontonummer
      */
     public abstract String getKontoNr();
 
 
     /**
-     * Abstrakte Methode zum Abrufen des aktuellen Kontostands.
+     * Gibt den aktuellen Kontostand zurück.
      *
-     * @return Der aktuelle Kontostand des Kontos.
+     * @return der Kontostand
      */
     public abstract double getKontoStand();
 
     /**
-     * Abstrakte Methode zum Ueberpruefen, ob das Konto aktiv ist.
+     * Überprüft, ob das Konto aktiv ist.
      *
-     * @return true, wenn das Konto aktiv ist; false, wenn das Konto nicht aktiv ist.
+     * @return true, wenn das Konto aktiv ist, sonst false
      */
     public abstract boolean isKontoAktiv();
 
     /**
-     * Abstrakte Methode zum Abrufen der Gesamtsumme der Einzahlungen auf dem Konto.
+     * Gibt die gesamte Einzahlungssumme auf das Konto zurück.
      *
-     * @return Die Gesamtsumme der Einzahlungen.
+     * @return die Summe der Einzahlungen
      */
     public abstract double getSummeEinzahlungen();
 
     /**
-     * Abstrakte Methode zum Abrufen der Gesamtsumme der Auszahlungen von dem Konto.
+     * Gibt die gesamte Auszahlungssumme vom Konto zurück.
      *
-     * @return Die Gesamtsumme der Auszahlungen.
+     * @return die Summe der Auszahlungen
      */
     public abstract double getSummeAuszahlungen();
 
+    /**
+     * Setzt die Summe der Einzahlungen und informiert ggf. Beobachter.
+     *
+     * @param summeEinzahlungen der neue Wert für SummeEinzahlungen
+     */
     public abstract void setSummeEinzahlungen(double summeEinzahlungen);
+
+    /**
+     * Setzt die Summe der Auszahlungen und informiert ggf. Beobachter.
+     *
+     * @param summeAuszahlungen der neue Wert für SummeAuszahlungen
+     */
     public abstract void setSummeAuszahlungen(double summeAuszahlungen);
 
     /**
-     * Abstrakte Methode zum Durchfuehren einer Auszahlung von einem Konto.
+     * Führt eine Auszahlung vom Konto durch, sofern die Bedingungen erfüllt sind.
+     * <p>
+     * Diese Methode aktualisiert auch die Datenbank entsprechend.
      *
-     * @param betrag Der Betrag, der aus dem Konto abgehoben wird.
-     * @param con Die Verbindung zur Datenbank.
-     * @throws SQLException Wenn ein Datenbankfehler auftritt.
+     * @param betrag Der abzuhebende Betrag
+     * @throws SQLException bei einem Datenbankfehler
      */
     public abstract void auszahlen(double betrag) throws SQLException;
 
     /**
-     * Abstrakte Methode zum Durchfuehren einer Ueberweisung von diesem Konto auf ein anderes Konto.
+     * Führt eine Überweisung an ein anderes Konto durch.
      *
-     * @param betrag Der zu ueberweisende Betrag.
-     * @param konto Das Zielkonto, auf das die Ueberweisung erfolgt.
-     * @param con Die Verbindung zur Datenbank.
-     * @param kontoNrVersender Die Kontonummer des versendenden Kontos.
-     * @param kontoNrEmpfaenger Die Kontonummer des empfangenden Kontos.
-     * @throws SQLException Wenn ein Datenbankfehler auftritt.
+     * @param betrag            Der zu überweisende Betrag
+     * @param konto             Das Empfängerkonto
+     * @param kontoNrVersender  Kontonummer des Absenders
+     * @param kontoNrEmpfaenger Kontonummer des Empfängers
+     * @throws SQLException bei einem Datenbankfehler
      */
     public abstract void ueberweisen(double betrag, Konto konto, String kontoNrVersender, String kontoNrEmpfaenger) throws SQLException;
 
     /**
-     * Abstrakte Methode zur Berechnung der jeweiligen Zinsen fuer das Konto.
+     * Berechnet die Zinsen für das Konto abhängig vom Kontostand und aktualisiert diesen.
      *
-     * @param con Die Verbindung zur Datenbank.
-     * @throws SQLException Wenn ein Datenbankfehler auftritt.
+     * @throws SQLException bei einem Datenbankfehler
      */
     public abstract void berechneZinsen() throws SQLException;
 }
