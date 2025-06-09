@@ -10,8 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * Controller-Klasse für das Girokonto-Dashboard.
- * Sie steuert die Interaktion mit dem Benutzer für Girokonto-Operationen wie Einzahlungen, Auszahlungen usw.
+ * Controller für die Anzeige des Kontoauszugs eines Girokontos.
  */
 public class GKKontoauszugController {
     /** Label für Kundendaten */
@@ -38,9 +37,8 @@ public class GKKontoauszugController {
     private Kunde kunde;
 
     /**
-     * Übergibt das Girokonto und holt den zugehörigen Kunden aus der Datenbank.
-     *
-     * @param konto Das Girokonto-Objekt
+     * Setzt das Konto und den Kunden und aktualisiert die Oberfläche.
+     * @param konto Das Girokonto
      * @throws SQLException Bei Datenbankfehlern
      */
     public void setGiroKontoUndKunde(GiroKonto konto) throws SQLException {

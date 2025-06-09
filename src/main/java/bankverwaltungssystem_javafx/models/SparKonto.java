@@ -9,18 +9,17 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * Repräsentiert ein Sparkonto in der Bankanwendung.
+ * Die Klasse Sparkonto erweitert {@link Konto} und stellt ein konkretes Modell
+ * für ein Sparkonto dar. Sie beinhaltet Methoden zur Durchführung von Bankaktionen wie
+ * Ein- und Auszahlungen, Überweisungen, Zinsberechnung.
  * <p>
- * Ein Sparkonto ist ein spezielles Konto mit ausschließlich positiven Zinsen.
- * Es bietet Methoden zum Ein- und Auszahlen, zur Zinsberechnung sowie zur Überweisung.
- * Änderungen am Kontostand oder an Transaktionen benachrichtigen automatisch registrierte Listener
- * mittels des {@link KontoObserver}.
+ * Änderungen an bestimmten Eigenschaften benachrichtigen registrierte UI-Elemente über {@link KontoObserver}.
  */
-public class SparKonto extends Konto{
+public class SparKonto extends Konto {
 
     /**
      * Der Zinssatz, der auf Guthaben angewendet wird.
-     * Dieser Wert ist immer positiv, da es bei .
+     * Dieser Wert ist immer positiv, da ein Sparkonto nicht ins minus gehen kann.
      */
     private double zinssatz;
 
@@ -170,7 +169,7 @@ public class SparKonto extends Konto{
     public void ueberweisen(double betrag, Konto konto, String kontoNrVersender, String kontoNrEmpfaenger) throws SQLException{
         Connection con = DBManager.getConnection();
         try {
-            if (konto.isKontoAktiv() && (kontoStand >= betrag)) { // *-1 damit ich den positiven ÜberziehungsLimit auf einen negativen Überziehungs-limit verwandele -> Grund: Vergleich
+            if (konto.isKontoAktiv() && (kontoStand >= betrag)) {
                 if (konto instanceof GiroKonto) {
                     konto.kontoStand += betrag;
                     konto.summeEinzahlungen += betrag;

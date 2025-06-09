@@ -29,7 +29,7 @@ public class SKKontoauszugController {
     @FXML private Label lblAuszahlungen2;
     @FXML private Label lblZinssatz2;
 
-    /** Das anzuzeigende Sparkonto */
+    /** Das angezeigte Sparkonto */
     private SparKonto sparKonto;
     /** Der zugehörige Kunde */
     private Kunde kunde;
@@ -47,7 +47,9 @@ public class SKKontoauszugController {
         DBManager.closeConnection();
     }
 
-    /** Aktualisiert alle UI-Felder mit Kunden- und Kontodaten. */
+    /**
+     * Aktualisiert die Benutzeroberfläche mit Kunden- und Kontodaten.
+     */
     private void updateUI() {
         if (sparKonto != null && kunde != null) {
             // Kundendaten

@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 /**
- * Utility-Klasse zur Verwaltung von Fensterwechseln in der JavaFX-Oberfläche.
+ * Klasse zur Verwaltung von Fensterwechseln in der JavaFX-Oberfläche.
  */
 public class FensterManager {
 
@@ -36,13 +36,19 @@ public class FensterManager {
 
     /**
      * Öffnet ein neues Fenster und gibt dessen zugehörigen Controller zurück.
+     * <p>
+     * Verwendet einen generischen Rückgabetyp <T>, um den konkreten Controller-Typ typsicher zurückzugeben,
+     * ohne explizites Casting.
+     * Das heißt, du weißt zur Kompilierzeit noch nicht, welchen genauen Rückgabetyp die Methode haben wird.
+     * Stattdessen gibst du an, dass sie einen beliebigen Typ T zurückgeben kann, und dieser Typ wird durch den
+     * tatsächlichen Controller bestimmt, der im FXML hinterlegt ist.
      *
      * @param fxmlPfad Pfad zur FXML-Datei.
      * @param titel Titel des neuen Fensters.
      * @param ereignis Das auslösende ActionEvent.
+     * @param <T> Deklaration des generischen Typs T (T = tatsaechliche Typ, den die Methode zurückgibt z.B. GKDashboardController)
      * @return Der Controller des neuen Fensters.
      * @throws IOException falls das FXML nicht geladen werden kann.
-     * @param <T> Typ des Controllers.
      */
     public static <T> T oeffneFensterUndHoleController(String fxmlPfad, String titel, ActionEvent ereignis) throws IOException {
         FXMLLoader ladehilfe = new FXMLLoader(FensterManager.class.getResource(fxmlPfad));

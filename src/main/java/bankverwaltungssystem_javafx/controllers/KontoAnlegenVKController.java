@@ -66,7 +66,7 @@ public class KontoAnlegenVKController {
         Connection con = DBManager.getConnection();
         kunde = KundenService.getKundeById(con);
         GiroKonto giroKonto = kunde.eroeffneGiroKonto(kontoNr, kontostand, kontoAktiv, spesen, ueberziehunslimit, negativZinssatz, positivZinssatz);
-        GKDashboardController controller = FensterManager.oeffneFensterUndHoleController(
+        GKDashboardController controller = FensterManager.oeffneFensterUndHoleController( // damit die Kontodaten auf das GKDashboard übertragen werden
                     "/bankverwaltungssystem_javafx/gkDashboard.fxml", "Girokonto-Dashboard", event);
         controller.setGiroKonto(giroKonto);
         DBManager.closeConnection();
@@ -83,7 +83,7 @@ public class KontoAnlegenVKController {
         Connection con = DBManager.getConnection();
         kunde = KundenService.getKundeById(con);
         SparKonto sparKonto = kunde.eroeffneSparKonto(kontoNr, kontostand, kontoAktiv, zinssatz);
-        SKDashboardController controller = FensterManager.oeffneFensterUndHoleController(
+        SKDashboardController controller = FensterManager.oeffneFensterUndHoleController( // damit die Kontodaten auf das SKDashboard übertragen werden
                 "/bankverwaltungssystem_javafx/skDashboard.fxml", "Sparkonto-Dashboard", event);
         controller.setSparKonto(sparKonto);
         DBManager.closeConnection();

@@ -46,7 +46,7 @@ public class VorhandeneSparkontoController {
     private void sparkontoAuswaehlen(ActionEvent event) throws IOException {
         SparKonto selectedSK = lvSparkonto.getSelectionModel().getSelectedItem();
         if (selectedSK != null) {
-            SKDashboardController controller = FensterManager.oeffneFensterUndHoleController(
+            SKDashboardController controller = FensterManager.oeffneFensterUndHoleController( // damit die Kontodaten auf das SKDashboard übertragen werden
                     "/bankverwaltungssystem_javafx/skDashboard.fxml", "Sparkonto-Dashboard", event);
             controller.setSparKonto(selectedSK);
         }

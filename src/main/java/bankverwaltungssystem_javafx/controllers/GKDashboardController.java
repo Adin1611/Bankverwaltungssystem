@@ -16,6 +16,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * Controller für das Girokonto-Dashboard.
+ * Verwaltet UI-Elemente und Aktionen für Einzahlungen, Auszahlungen, Überweisungen, Zinsberechnung, Spesen-Abzug.
+ */
 public class GKDashboardController implements Initializable {
     /** Label zur Anzeige der Kontonummer */
     @FXML private Label lblGKKontoNr2;
@@ -49,13 +53,15 @@ public class GKDashboardController implements Initializable {
     private GiroKonto giroKonto;
 
     /**
-     * Initialisierungsmethode des Controllers.
-     * Registriert den Observer für Kontoänderungen.
+     * Initialisiert den Controller.
+     *
+     * Registriert einen Observer (Beobachter), der auf Änderungen der Kontodaten hört.
+     * Sobald sich bestimmte Kontodaten ändern, wird die Methode {@code updateUI} aufgerufen,
+     * um die Benutzeroberfläche entsprechend zu aktualisieren.
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Füge einen Listener hinzu, der die UI aktualisiert, wenn sich die Kontodaten ändern
-        KontoObserver.addListener(this::updateUI);
+        KontoObserver.addListener(this::updateUI); // = Methodenreferenz - synonym zu anonyme innere Klasse
     }
 
     /**
@@ -86,7 +92,7 @@ public class GKDashboardController implements Initializable {
     }
 
     /**
-     * Führt eine Einzahlung aus und leert das Eingabefeld.
+     * Führt eine Einzahlung aus.
      *
      * @throws SQLException Bei Datenbankfehlern
      */
@@ -155,7 +161,7 @@ public class GKDashboardController implements Initializable {
      */
     @FXML
     private void kontoauszugDrucken(ActionEvent event) throws SQLException, IOException {
-        GKKontoauszugController controller = FensterManager.oeffneFensterUndHoleController(
+        GKKontoauszugController controller = FensterManager.oeffneFensterUndHoleController( // damit die Kunden- und Kontodaten auf dem GKKontoauszug übertragen werden
                 "/bankverwaltungssystem_javafx/gkKontoauszug.fxml", "Kontoauszug", event);
         controller.setGiroKontoUndKunde(giroKonto);
     }

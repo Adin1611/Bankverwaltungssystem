@@ -13,7 +13,7 @@ import java.io.IOException;
 public class Main extends Application {
 
     /**
-     * Startet die JavaFX-Anwendung und lädt die Hauptoberfläche.
+     * Startet die JavaFX-Anwendung und lädt das Hauptfenster.
      *
      * @param stage Das Hauptfenster der Anwendung.
      * @throws IOException wenn die FXML-Datei nicht geladen werden kann.
@@ -30,7 +30,7 @@ public class Main extends Application {
     /**
      * Einstiegspunkt der JavaFX-Anwendung.
      *
-     * @param args Kommandozeilenargumente (nicht verwendet).
+     * @param args Kommandozeilenargumente.
      */
     public static void main(String[] args) {
         launch();

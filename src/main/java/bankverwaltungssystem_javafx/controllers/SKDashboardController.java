@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
 
 /**
  * Controller für das Sparkonto-Dashboard.
- * Verwaltet UI-Elemente und Aktionen für Einzahlungen, Auszahlungen, Überweisungen, Zinsberechnung usw.
+ * Verwaltet UI-Elemente und Aktionen für Einzahlungen, Auszahlungen, Überweisungen, Zinsberechnung.
  */
 public class SKDashboardController implements Initializable {
 
@@ -47,11 +47,16 @@ public class SKDashboardController implements Initializable {
     /** Das aktive Sparkonto */
     private SparKonto sparKonto;
 
-    /** Initialisiert den Controller und registriert UI-Update-Listener. */
+    /**
+     * Initialisiert den Controller.
+     *
+     * Registriert einen Observer (Beobachter), der auf Änderungen der Kontodaten hört.
+     * Sobald sich bestimmte Kontodaten ändern, wird die Methode {@code updateUI} aufgerufen,
+     * um die Benutzeroberfläche entsprechend zu aktualisieren.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Füge einen Listener hinzu, der die UI aktualisiert, wenn sich die Kontodaten ändern
-        KontoObserver.addListener(this::updateUI);
+        KontoObserver.addListener(this::updateUI); // = Methodenreferenz - synonym zu anonyme innere Klasse
     }
 
     /**
@@ -130,7 +135,7 @@ public class SKDashboardController implements Initializable {
      */
     @FXML
     private void kontoauszugDrucken(ActionEvent event) throws SQLException, IOException {
-        SKKontoauszugController controller = FensterManager.oeffneFensterUndHoleController(
+        SKKontoauszugController controller = FensterManager.oeffneFensterUndHoleController( // damit die Kunden- und Kontodaten auf dem SKKontoauszug übertragen werden
                 "/bankverwaltungssystem_javafx/skKontoauszug.fxml", "Kontoauszug", event);
         controller.setSparKontoUndKunde(sparKonto);
     }

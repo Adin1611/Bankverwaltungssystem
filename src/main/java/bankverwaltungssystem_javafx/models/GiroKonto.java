@@ -10,34 +10,24 @@ import java.sql.SQLException;
 
 /**
  * Die Klasse Girokonto erweitert {@link Konto} und stellt ein konkretes Modell
- * für ein Girokonto mit zusätzlichen Eigenschaften wie Überziehungslimit, Zinssätzen
- * und Spesen dar. Sie beinhaltet Methoden zur Durchführung von Bankaktionen wie
+ * für ein Girokonto dar. Sie beinhaltet Methoden zur Durchführung von Bankaktionen wie
  * Ein- und Auszahlungen, Überweisungen, Zinsberechnung und Spesenabzug.
  * <p>
- * Änderungen am Kontostand benachrichtigen registrierte UI-Elemente über {@link KontoObserver}.
+ * Änderungen an bestimmten Eigenschaften benachrichtigen registrierte UI-Elemente über {@link KontoObserver}.
  */
 public class GiroKonto extends Konto {
 
-    /**
-     * Die maximale Hoehe, bis zu der das Girokonto ueberzogen werden kann.
-     */
+    /** Die maximale Höhe, bis zu der das Girokonto überzogen werden kann. */
     private double ueberziehungsLimit;
 
-    /**
-     * Zinssatz für negative Kontostände
-     */
+    /** Zinssatz für negative Kontostände */
     private double negativZinssatz;
 
-    /**
-     * Zinssatz für positive Kontostände (z. B. 2.0 für 2 %).
-     */
+    /** Zinssatz für positive Kontostände (z.B. 2.0 für 2%).*/
     private double positivZinssatz;
 
-    /**
-     * Die Spesen, die mit dem Girokonto verbunden sind.
-     */
+    /** Die Spesen, die mit dem Girokonto verbunden sind.*/
     private double spesen;
-
 
     /**
      * Konstruktor zum Erstellen eines GiroKontos.
@@ -121,16 +111,16 @@ public class GiroKonto extends Konto {
     }
 
     /**
-     * Gibt das Ueberziehungslimit des Girokontos zurueck.
+     * Gibt das Überziehungslimit des Girokontos zurück.
      *
-     * @return Das Ueberziehungslimit des Girokontos.
+     * @return Das Überziehungslimit des Girokontos.
      */
     public double getUeberziehungsLimit() {
         return ueberziehungsLimit;
     }
 
     /**
-     * Gibt den Negativ-Zinssatz des Girokontos zurueck.
+     * Gibt den Negativ-Zinssatz des Girokontos zurück.
      *
      * @return Der Negativ-Zinssatz des Girokontos.
      */
@@ -139,7 +129,7 @@ public class GiroKonto extends Konto {
     }
 
     /**
-     * Gibt den Positiv-Zinssatz des Girokontos zurueck.
+     * Gibt den Positiv-Zinssatz des Girokontos zurück.
      *
      * @return Der Positiv-Zinssatz des Girokontos.
      */
@@ -148,7 +138,7 @@ public class GiroKonto extends Konto {
     }
 
     /**
-     * Gibt die Spesen des Girokontos zurueck.
+     * Gibt die Spesen des Girokontos zurück.
      *
      * @return Die Spesen des Girokontos.
      */
@@ -223,7 +213,7 @@ public class GiroKonto extends Konto {
     public void ueberweisen(double betrag, Konto konto, String kontoNrVersender, String kontoNrEmpfaenger) throws SQLException {
         Connection con = DBManager.getConnection();
         try {
-            if (konto.isKontoAktiv() && ((kontoStand + ueberziehungsLimit) >= betrag)) { // *-1 damit ich den positiven ÜberziehungsLimit auf einen negativen Überziehungs-limit verwandele -> Grund: Vergleich
+            if (konto.isKontoAktiv() && ((kontoStand + ueberziehungsLimit) >= betrag)) {
                 if (konto instanceof GiroKonto) {
                     konto.kontoStand += betrag;
                     konto.summeEinzahlungen += betrag;
@@ -274,8 +264,8 @@ public class GiroKonto extends Konto {
                 updateKontostandVersenderkontoGirokontoStatement.setDouble(1, betrag);
                 updateKontostandVersenderkontoGirokontoStatement.setString(2, kontoNrVersender);
                 updateKontostandVersenderkontoGirokontoStatement.executeUpdate();
-
                 updateKontostandVersenderkontoGirokontoStatement.close();
+
                 // Update summeAuszahlungen vom Versenderkonto in der Girokonto-Tabelle
                 String updateSummeAuszahlungenVersenderkontoGirokontoSQL = "UPDATE girokonto SET summeAuszahlungen = summeAuszahlungen + ? WHERE kontoNr = ?";
                 PreparedStatement updateSummeAuszahlungenVersenderkontoGirokontoStatement = con.prepareStatement(updateSummeAuszahlungenVersenderkontoGirokontoSQL);

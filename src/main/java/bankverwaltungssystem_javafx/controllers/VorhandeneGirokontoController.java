@@ -47,7 +47,7 @@ public class VorhandeneGirokontoController {
     private void girokontoAuswaehlen(ActionEvent event) throws IOException, SQLException {
         GiroKonto selectedGK = lvGirokonto.getSelectionModel().getSelectedItem();
         if (selectedGK != null) {
-            GKDashboardController controller = FensterManager.oeffneFensterUndHoleController(
+            GKDashboardController controller = FensterManager.oeffneFensterUndHoleController( // damit die Kontodaten auf das GKDashboard übertragen werden
                     "/bankverwaltungssystem_javafx/gkDashboard.fxml", "Girokonto-Dashboard", event);
             controller.setGiroKonto(selectedGK);
         }

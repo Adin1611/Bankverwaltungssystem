@@ -22,38 +22,36 @@ import java.util.List;
  */
 public class Kunde {
 
-    /**
-     * Der Name des Kunden.
-     */
+    /** Der Name des Kunden */
     private String name;
 
-    /**
-     * Der Wohnort des Kunden.
-     */
+    /** Der Wohnort des Kunden. */
     private String ort;
 
-    /**
-     * Die E-Mail-Adresse des Kunden.
-     */
+    /** Die E-Mail-Adresse des Kunden */
     private String email;
 
-    /**
-     * Die Identifikationsnummer des Kunden.
-     */
+    /** Die Identifikationsnummer des Kunden. */
     private String identifikationsNr;
 
-    /**
-     * Die Kreditwuerdigkeit des Kunden.
-     */
+    /** Die Kreditwuerdigkeit des Kunden.*/
     private boolean kreWuerdigkeit;
 
     /**
-     * Die ObservableList, die alle gefundenen Girokonten enthält.
+     * ObservableList, die alle Girokonten des Kunden enthält.
+     * <p>
+     * Diese Liste ist direkt an die Benutzeroberfläche (ListView) gebunden (setItems()).
+     * Änderungen an der Liste (z.B. Hinzufügen oder Entfernen von Konten)
+     * werden automatisch in der UI angezeigt, ohne dass manuelles Aktualisieren notwendig ist.
      */
     private ObservableList<GiroKonto> girokontenListe;
 
     /**
-     * Die ObservableList, die alle gefundenen Sparkonten enthält.
+     * ObservableList, die alle Sparkonten des Kunden enthält.
+     * <p>
+     * Diese Liste ist direkt an die Benutzeroberfläche (ListView) gebunden (setItems()).
+     * Änderungen an der Liste (z.B. Hinzufügen oder Entfernen von Konten)
+     * werden automatisch in der UI angezeigt, ohne dass manuelles Aktualisieren notwendig ist.
      */
     private ObservableList<SparKonto> sparkontenListe;
 
@@ -124,11 +122,11 @@ public class Kunde {
     }
 
     /**
-     * Ermittelt die Kundennummer aus der Datenbank.
+     * Ermittelt die Kunden-ID aus der Datenbank.
      *
      * @param con Datenbankverbindung
      * @return Kunden-ID (kid)
-     * @throws SQLException bei SQL-Fehlern
+     * @throws SQLException wenn ein Datenbankfehler auftritt.
      */
     public int getKundeID(Connection con) throws SQLException{
         String abfrageId = "SELECT kid FROM kunde WHERE identifikationsNr = '" + identifikationsNr + "'";
@@ -164,6 +162,7 @@ public class Kunde {
 
     /**
      * Eroeffnet ein neues Girokonto fuer den Kunden.
+     *
      * @param kontoNr Kontonummer
      * @param kontoStandStr Kontostand (als String)
      * @param kontoAktiv ob das Konto aktiv isr
@@ -279,8 +278,7 @@ public class Kunde {
      */
     public void initialisiereListViewGK(ListView<GiroKonto> listView) {
         listView.setItems(girokontenListe);
-        
-        // Setze den CellFactory für die ListView
+
         listView.setCellFactory(new Callback<ListView<GiroKonto>, ListCell<GiroKonto>>() {
             @Override
             public ListCell<GiroKonto> call(ListView<GiroKonto> param) {
@@ -313,8 +311,7 @@ public class Kunde {
     }
 
     /**
-     * Legt ein neues Sparkonto für den Kunden an, sofern noch kein Konto mit der gleichen Kontonummer existiert.
-     * Es erfolgt eine Validierung des Kontostands und eine Überprüfung auf doppelte Kontonummern.
+     * Eroeffnet ein neues Girokonto fuer den Kunden
      *
      * @param kontoNr       Kontonummer
      * @param kontoStandStr Kontostand (als String)

@@ -14,18 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Die Klasse KundenService stellt Methoden zur Verwaltung von Kunden bereit,
- * darunter das Erstellen und Suchen von Kunden sowie das Initialisieren einer Kunden-ListView.
+ * Die Klasse KundenService stellt Methoden zur Verwaltung von Kunden bereit, darunter das Erstellen und Suchen von Kunden.
  */
 public class KundenService {
 
-    /**
-     * Der aktuell aktive Kunde (statisch, um übergreifend zugänglich zu sein).
-     */
+    /** Der aktuell aktive Kunde (statisch, um übergreifend zugänglich zu sein). */
     private static Kunde kunde;
 
     /**
-     * Die ObservableList, die alle gefundenen Kunden enthält.
+     * ObservableList, die alle Kunden enthält.
+     * <p>
+     * Diese Liste ist direkt an die Benutzeroberfläche (ListView) gebunden (setItems()).
+     * Änderungen an der Liste (z.B. Hinzufügen oder Entfernen von Kunden)
+     * werden automatisch in der UI angezeigt, ohne dass manuelles Aktualisieren notwendig ist.
      */
     private ObservableList<Kunde> kundenListe;
 
@@ -44,7 +45,7 @@ public class KundenService {
      * @param ort            Wohnort des Kunden
      * @param email          E-Mail-Adresse des Kunden
      * @param id             Identifikationsnummer des Kunden
-     * @param kreditwuerdig  Kreditwürdigkeit des Kunden
+     * @param kreditwuerdig  Kreditwuerdigkeit des Kunden
      * @return Das erstellte oder bereits vorhandene Kunden-Objekt
      * @throws SQLException  Wenn ein Datenbankfehler auftritt
      */
@@ -94,7 +95,7 @@ public class KundenService {
     /**
      * Sucht alle Kunden mit dem angegebenen Namen in der Datenbank.
      *
-     * @param name Der Name, nach dem gesucht werden soll (LIKE-Abfrage)
+     * @param name Der Name, nach dem gesucht werden soll
      * @return Liste der gefundenen Kunden
      * @throws SQLException Bei einem Datenbankfehler
      */
@@ -167,7 +168,7 @@ public class KundenService {
     }
 
     /**
-     * Holt einen Kunden anhand seiner Datenbank-ID (kid) aus der Datenbank.
+     * Holt einen Kunden anhand seiner Kunden-ID (kid) aus der Datenbank.
      *
      * @param con Die Datenbankverbindung
      * @return Das Kundenobjekt oder null, wenn kein Kunde gefunden wurde

@@ -34,7 +34,7 @@ public class HauptfensterController {
     /** Eingabefeld für die Namenssuche vorhandener Kunden */
     @FXML private TextField txtVKName;
 
-    /** Service zur Verwaltung von Kunden */
+    /** Zur Verwaltung von Kunden */
     private KundenService kundenService;
 
     /**
@@ -87,7 +87,6 @@ public class HauptfensterController {
             // Braucht man sonst schließen sich die Fenster nicht richtig
             Stage aktuellesFenster = (Stage) ((Node) event.getSource()).getScene().getWindow();
             aktuellesFenster.close();
-
         }
     }
 }

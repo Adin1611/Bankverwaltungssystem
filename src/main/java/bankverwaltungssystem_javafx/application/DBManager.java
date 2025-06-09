@@ -5,13 +5,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * Singleton-Klasse zur Verwaltung der Datenbankverbindung.
+ * Klasse zur Verwaltung der Datenbankverbindung.
  * Stellt sicher, dass nur eine Verbindung gleichzeitig aktiv ist.
  */
 public class DBManager {
 
+    /** DB-Verbindung */
     private static Connection connection;
 
+    /** DB-Verbindungsdaten */
     private static final String URL = "jdbc:mysql://localhost:3306/bankverwaltungssystem";
     private static final String USER = "root";
     private static final String PASSWORD = "";

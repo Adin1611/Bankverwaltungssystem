@@ -6,35 +6,22 @@ import java.sql.SQLException;
  * Die abstrakte Klasse Konto bildet die Basis für verschiedene Kontotypen
  * wie {@link GiroKonto} oder {@link SparKonto}. Sie enthält allgemeine Eigenschaften
  * und abstrakte Methoden zur Verwaltung eines Kontos.
- *
- * <p>Diese Klasse folgt dem Prinzip der Vererbung und stellt eine einheitliche Schnittstelle
- * für alle Kontotypen zur Verfügung.</p>
  */
 public abstract class Konto {
 
-    /**
-     * Die Kontonummer des Kontos.
-     */
+    /** Die Kontonummer des Kontos. */
     String kontoNr;
 
-    /**
-     * Der aktuelle Kontostand des Kontos.
-     */
+    /** Der aktuelle Kontostand des Kontos. */
     double kontoStand;
 
-    /**
-     * Ein Wert, welcher angibt, ob das Konto aktiv ist oder nicht.
-     */
+    /** Ein Wert, welcher angibt, ob das Konto aktiv ist oder nicht. */
     boolean kontoAktiv;
 
-    /**
-     * Die Gesamtsumme der Einzahlungen auf dem Konto.
-     */
+    /** Die Gesamtsumme der Einzahlungen auf dem Konto. */
     double summeEinzahlungen;
 
-    /**
-     * Die Gesamtsumme der Auszahlungen von dem Konto.
-     */
+    /** Die Gesamtsumme der Auszahlungen von dem Konto. */
     double summeAuszahlungen;
 
     /**
@@ -87,14 +74,14 @@ public abstract class Konto {
     public abstract double getSummeAuszahlungen();
 
     /**
-     * Setzt die Summe der Einzahlungen und informiert ggf. Beobachter.
+     * Setzt die Summe der Einzahlungen und informiert Beobachter (KontoObserver).
      *
      * @param summeEinzahlungen der neue Wert für SummeEinzahlungen
      */
     public abstract void setSummeEinzahlungen(double summeEinzahlungen);
 
     /**
-     * Setzt die Summe der Auszahlungen und informiert ggf. Beobachter.
+     * Setzt die Summe der Auszahlungen und informiert Beobachter (KontoObserver).
      *
      * @param summeAuszahlungen der neue Wert für SummeAuszahlungen
      */
