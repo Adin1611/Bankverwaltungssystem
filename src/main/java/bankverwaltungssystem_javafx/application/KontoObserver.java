@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Implementiert das Observer-Pattern für Kontoänderungen.
  *
- * Diese Klasse verwaltet eine Liste von Listeners (z.B. Methoden wie updateUI()),
+ * Diese Klasse verwaltet eine Liste von Listeners (in dem Fall nur: updateUI()),
  * die automatisch aufgerufen werden, wenn sich bestimmte Kontodaten ändern
  * – z.B. bei Einzahlungen, Auszahlungen oder Zinsberechnungen.
  *
@@ -25,8 +25,8 @@ import java.util.List;
 public class KontoObserver {
 
     /**
-     * Liste aller registrierten Listener, die bei Änderungen an Kontodaten benachrichtigt werden sollen.
-     * Jeder Listener ist ein Runnable, der typischerweise UI-Komponenten aktualisiert.
+     * Liste aller registrierten Listener, die bei Änderungen an Kontodaten ausgeführt werden sollen.
+     * Jeder Listener ist ein Runnable, das typischerweise UI-Komponenten aktualisiert.
      */
     private static final List<Runnable> listeners = new ArrayList<>();
 
@@ -41,7 +41,7 @@ public class KontoObserver {
 
     /**
      * Benachrichtigt alle registrierten Listener, dass sich die Kontodaten geändert haben.
-     * Die Methode, die mit addListener() registriert wurde (updateUI()), wird aufgerufen.
+     * In dem Fall: Die Methode, die mit addListener() registriert wurde (updateUI()), wird aufgerufen.
      *
      * Platform.runLater()
      *  -> JavaFX erlaubt UI-Updates nur im sogenannten „UI-Thread“.

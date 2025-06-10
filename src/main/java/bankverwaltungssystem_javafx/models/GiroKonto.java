@@ -416,6 +416,7 @@ public class GiroKonto extends Konto {
             });
         }else {
             kontoStand -= this.spesen;
+
             // Update kontostand vom jeweiligen Konto nach Abzug der Spesen in der Girokonto-Tabelle
             String updateKontostandNachAbzugSpesenGirokontoSQL = "UPDATE girokonto SET kontostand = kontostand - ? WHERE kontoNr = ?";
             PreparedStatement updateKontostandNachAbzugSpesenGirokontoStatement = con.prepareStatement(updateKontostandNachAbzugSpesenGirokontoSQL);

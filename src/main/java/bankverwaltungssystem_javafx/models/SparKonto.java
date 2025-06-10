@@ -19,7 +19,7 @@ public class SparKonto extends Konto {
 
     /**
      * Der Zinssatz, der auf Guthaben angewendet wird.
-     * Dieser Wert ist immer positiv, da ein Sparkonto nicht ins minus gehen kann.
+     * Dieser Wert ist immer positiv, da ein Sparkonto nicht ins "minus" gehen kann.
      */
     private double zinssatz;
 
@@ -301,7 +301,7 @@ public class SparKonto extends Konto {
      * @param betrag Der Betrag, der monatlich eingezahlt wird.
      * @throws SQLException wenn ein Fehler beim Datenbankzugriff auftritt.
      */
-    public void monatlicheEinzahlung(double betrag) throws SQLException{
+    public void monatlicheEinzahlung(double betrag) throws SQLException {
         Connection con = DBManager.getConnection();
         if (isKontoAktiv()) {
             kontoStand += betrag;

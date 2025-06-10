@@ -39,8 +39,8 @@ public class FensterManager {
      * <p>
      * Verwendet einen generischen Rückgabetyp <T>, um den konkreten Controller-Typ typsicher zurückzugeben,
      * ohne explizites Casting.
-     * Das heißt, du weißt zur Kompilierzeit noch nicht, welchen genauen Rückgabetyp die Methode haben wird.
-     * Stattdessen gibst du an, dass sie einen beliebigen Typ T zurückgeben kann, und dieser Typ wird durch den
+     * Das heißt, man weiß zur Kompilierzeit noch nicht, welchen genauen Rückgabetyp die Methode haben wird.
+     * Stattdessen gibt man an, dass sie einen beliebigen Typ T zurückgeben kann, und dieser Typ wird durch den
      * tatsächlichen Controller bestimmt, der im FXML hinterlegt ist.
      *
      * @param fxmlPfad Pfad zur FXML-Datei.

@@ -289,7 +289,7 @@ public class Kunde {
                         if (empty || giroKonto == null) {
                             setText(null);
                         } else {
-                            setText(String.format("%s (Kontostand: %s)",
+                            setText(String.format("%s (Kontostand: %s)", // %s = Platzhalter für String
                                 giroKonto.getKontoNr(),
                                 giroKonto.getKontoStand()));
                         }
@@ -300,8 +300,8 @@ public class Kunde {
     }
 
     /**
-     * Setzt die interne Liste der Girokonten neu.
-     * Diese Methode wird z.B verwendet, wenn Girokonten aus der Datenbank geladen wurden.
+     * Setzt die interne Liste der Girokonten.
+     * Diese Methode wird verwendet, wenn Girokonten aus der Datenbank geladen wurden.
      *
      * @param girokonten Liste der Girokonten, die gesetzt werden soll
      */
@@ -416,7 +416,6 @@ public class Kunde {
     public void initialisiereListViewSK(ListView<SparKonto> listView) {
         listView.setItems(sparkontenListe);
 
-        // Setze den CellFactory für die ListView
         listView.setCellFactory(new Callback<ListView<SparKonto>, ListCell<SparKonto>>() {
             @Override
             public ListCell<SparKonto> call(ListView<SparKonto> param) {

@@ -134,8 +134,7 @@ public class KundenService {
      */
     public void initialisiereListView(ListView<Kunde> listView) {
         listView.setItems(kundenListe);
-        
-        // Setze den CellFactory für die ListView
+
         listView.setCellFactory(new Callback<ListView<Kunde>, ListCell<Kunde>>() {
             @Override
             public ListCell<Kunde> call(ListView<Kunde> param) {
